@@ -1,0 +1,2720 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফেয়ার পলি লিঃ - HR & Personal File Management System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- TOP HEADER BAR (HIDDEN IN PRINT) -->
+    <header class="top-nav no-print">
+        <div class="nav-left">
+            <div class="logo-area">
+                <img id="navLogo" src="/static/img/default_logo.png" class="header-logo-img" alt="Logo">
+                <div>
+                    <h1 class="brand-title" id="navFactoryNameBn">ফেয়ার পলি লিঃ (FAIR POLY LTD.)</h1>
+                    <p class="brand-sub" id="navFactoryAddress">এইচ.আর পার্সোনাল ফাইল ও কমপ্লায়েন্স ডকুমেন্ট সিস্টেম</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-center">
+            <div class="search-box-wrapper" style="position:relative;">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="employeeSearch" placeholder="আইডি, নাম বা সেকশন দিয়ে খুঁজুন..." oninput="handleSearch(this.value)" onfocus="handleSearch(this.value)" autocomplete="off">
+                </div>
+                <div id="searchDropdown" class="search-dropdown-menu" style="display:none; position:absolute; top:calc(100% + 6px); left:0; width:340px; max-height:360px; overflow-y:auto; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,0.2); z-index:9999;">
+                    <!-- Auto populated search results -->
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <button class="btn btn-secondary" onclick="openFactoryModal()">
+                <span>⚙️</span> ফ্যাক্টরি সেটআপ
+            </button>
+            <button class="btn btn-secondary" onclick="openEmployeeModal()">
+                <span>👥</span> কর্মী তালিকা (<span id="empTotalCount">0</span>)
+            </button>
+            <button class="btn btn-primary" onclick="createNewEmployee()">
+                <span>➕</span> নতুন এন্ট্রি
+            </button>
+            <button class="btn btn-success" onclick="saveEmployeeData()">
+                <span>💾</span> সংরক্ষণ
+            </button>
+            <button class="btn btn-print" onclick="window.print()">
+                <span>🖨️</span> প্রিন্ট
+            </button>
+            <button class="btn btn-outline" onclick="printAllDocuments()">
+                <span>📑</span> সব ফরম প্রিন্ট
+            </button>
+        </div>
+    </header>
+
+        <!-- PRIMARY MODULE TOP NAVIGATION BAR (HIDDEN IN PRINT) -->
+    <nav class="top-module-nav no-print" id="topModuleNav">
+        <div class="top-nav-tabs">
+            <button type="button" class="top-tab-btn active" id="btnTopPersonal" onclick="switchMainModule('personal')">
+                <span class="tab-icon">📁</span>
+                <span class="tab-title">কর্মী পার্সোনাল ফাইল ও ডকুমেন্ট (০১-১৪ ফরম)</span>
+                <span class="tab-pill">ফরমসমূহ</span>
+            </button>
+            <button type="button" class="top-tab-btn" id="btnTopSalary" onclick="switchMainModule('salary')">
+                <span class="tab-icon">📊</span>
+                <span class="tab-title">মাসিক স্যালারি শিট ও অ্যাটেন্ডেন্স</span>
+                <span class="tab-pill pill-blue">টপ মেনু</span>
+            </button>
+            <button type="button" class="top-tab-btn" id="btnTopDaily" onclick="switchMainModule('daily')">
+                <span class="tab-icon">📅</span>
+                <span class="tab-title">দৈনিক হাজিরা ও লাইভ পাঞ্চ</span>
+                <span class="tab-pill pill-green">🟢 লাইভ LAN (192.168.0.199)</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="app-container">
+        
+        <!-- SIDEBAR NAVIGATION (HIDDEN IN PRINT) -->
+        <aside class="sidebar no-print">
+            <!-- CURRENT EMPLOYEE CARD -->
+            <div class="emp-profile-card">
+                <div class="avatar-badge" id="sidebarAvatar">
+                    <span id="sidebarAvatarPlaceholder">👤</span>
+                    <img id="sidebarAvatarImg" src="" style="display:none;" alt="Photo">
+                </div>
+                <div class="emp-brief">
+                    <h3 id="sidebarEmpName">মোঃ সেলিম মিয়া</h3>
+                    <p class="emp-sub"><span id="sidebarEmpDesignation">হেলপার</span> | আইডি: <strong id="sidebarEmpId">১৬৯০</strong></p>
+                    <span class="badge-tag" id="sidebarEmpSection">ক্রোসেড</span>
+                </div>
+            </div>
+
+            <div class="sidebar-title">ডকুমেন্ট ও ফরম তালিকা</div>
+            <nav class="doc-menu">
+                <button class="doc-item active" onclick="switchTab(0)">
+                    <span class="doc-num">০১</span>
+                    <span class="doc-name">মাস্টার এন্ট্রি ফরম (Main Form)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(1)">
+                    <span class="doc-num">০২</span>
+                    <span class="doc-name">চাকরির আবেদন পত্র (Application)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(2)">
+                    <span class="doc-num">০৩</span>
+                    <span class="doc-name">বয়স ও শারীরিক প্রত্যয়ন (Age/Fitness)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(3)">
+                    <span class="doc-num">০৪</span>
+                    <span class="doc-name">নিয়োগপত্র (Appointment Letter)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(4)">
+                    <span class="doc-num">০৫</span>
+                    <span class="doc-name">পরিচয়পত্র (Employee ID Card)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(5)">
+                    <span class="doc-num">০৬</span>
+                    <span class="doc-name">বাৎসরিক বেতন বৃদ্ধি পত্র (Increment Letter)</span>
+                    <span class="star-badge">ইনক্রিমেন্ট</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(6)">
+                    <span class="doc-num">০৭</span>
+                    <span class="doc-name">কর্মদক্ষতা মূল্যায়ন (Appraisal Form)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(7)">
+                    <span class="doc-num">০৮</span>
+                    <span class="doc-name">ছুটি রেজিস্টার (Leave Register - ৯)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(8)">
+                    <span class="doc-num">০৯</span>
+                    <span class="doc-name">গেট পাস (Gate Pass)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(9)">
+                    <span class="doc-num">১০</span>
+                    <span class="doc-name">প্রাপ্তিস্বীকার পত্র (Acknowledgment)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(10)">
+                    <span class="doc-num">১১</span>
+                    <span class="doc-name">শ্রম আইন চিঠি ১ (Absence Notice 1)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(11)">
+                    <span class="doc-num">১২</span>
+                    <span class="doc-name">শ্রম আইন চিঠি ২ (Show Cause 2)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(12)">
+                    <span class="doc-num">১৩</span>
+                    <span class="doc-name">শ্রম আইন চিঠি ৩ (Final Notice 3)</span>
+                </button>
+                <button class="doc-item" onclick="switchTab(13)">
+                    <span class="doc-num">১৪</span>
+                    <span class="doc-name">চূড়ান্ত হিসাব (Final Settlement)</span>
+                </button>
+                    <div class="sidebar-title mt-15" style="margin-top:16px; padding-top:12px; border-top:1px dashed #cbd5e1;">ম্যানেজমেন্ট রিপোর্ট</div>
+                <button type="button" class="doc-item doc-item-highlight" onclick="switchMainModule('salary')" id="sideBtnSalary">
+                    <span class="doc-num" style="background:#2563eb; color:white;">📊</span>
+                    <span class="doc-name" style="font-weight:600; color:#1e40af;">মাসিক স্যালারি শিট</span>
+                    <span class="star-badge" style="background:#2563eb; color:white;">টপ মেনু</span>
+                </button>
+                <button type="button" class="doc-item doc-item-highlight" onclick="switchMainModule('daily')" id="sideBtnDaily" style="background:#f0fdf4; border-left:3px solid #16a34a;">
+                    <span class="doc-num" style="background:#16a34a; color:white;">📅</span>
+                    <span class="doc-name" style="font-weight:bold; color:#15803d;">দৈনিক লাইভ হাজিরা</span>
+                    <span class="star-badge" style="background:#16a34a; color:white;">LAN</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- CONTENT AREA -->
+        <main class="content-area">
+
+            <!-- TAB 0: MAIN DATA ENTRY FORM -->
+            <!-- TAB 0: MAIN DATA ENTRY FORM (EXCEL PAGE 1 SPREADSHEET LAYOUT) -->
+            <div id="tab-0" class="tab-pane active no-print-if-hidden">
+                <div class="card-box" style="padding: 20px 24px;">
+                    <div class="card-header flex-between" style="border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 18px;">
+                        <div>
+                            <h2 style="margin: 0; font-size: 20px; color: #1e3a8a; display: flex; align-items: center; gap: 8px;">
+                                <span>📋</span> নতুন কর্মী এন্ট্রি ফরম (Employee Entry - Page 1)
+                            </h2>
+                            <p class="text-muted" style="margin: 4px 0 0 0; font-size: 13px;">
+                                এক্সেল ফরম্যাটের ৪১টি ঘর ক্রমানুসারে ইনপুট করুন। এখানে তথ্য দিলে তা স্বয়ংক্রিয়ভাবে বাকি ১৩টি ফরম ও স্যালারি শিটে বসে যাবে।
+                            </p>
+                        </div>
+                        <div class="header-actions" style="display: flex; gap: 8px; align-items: center;">
+                            <button type="button" class="btn btn-sm btn-success" onclick="saveEmployeeData()" style="padding: 8px 16px; font-weight: bold; font-size: 13px; border-radius: 6px; cursor: pointer;">
+                                💾 সংরক্ষণ
+                            </button>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="createNewEmployee()" style="padding: 8px 14px; font-weight: bold; font-size: 13px; border-radius: 6px; cursor: pointer;">
+                                ➕ নতুন এন্ট্রি
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="openEmployeeModal()" style="padding: 8px 14px; font-weight: bold; font-size: 13px; border-radius: 6px; cursor: pointer;">
+                                👥 কর্মী তালিকা
+                            </button>
+                            <button type="button" class="btn btn-sm btn-print" onclick="window.print()" style="padding: 8px 14px; font-weight: bold; font-size: 13px; border-radius: 6px; cursor: pointer;">
+                                🖨️ প্রিন্ট
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- FORM START -->
+                    <form id="masterForm" onsubmit="event.preventDefault(); saveEmployeeData();">
+
+                        <!-- TOP BAR: PHOTOS UPLOAD & LIVE SALARY BREAKDOWN -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px 18px; align-items: center;">
+                            <!-- Worker Photo -->
+                            <div style="display: flex; align-items: center; gap: 12px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px;">
+                                <div class="photo-preview-frame" style="width: 58px; height: 68px; border: 2px dashed #94a3b8; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
+                                    <img id="workerPhotoPreview" src="" style="display:none; width: 100%; height: 100%; object-fit: cover;" alt="Worker">
+                                    <span class="placeholder-text" id="workerPhotoPlaceholder" style="font-size: 10px; color: #64748b; text-align: center;">কর্মীর ছবি</span>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; font-weight: bold; color: #1e293b;">কর্মীর ছবি (পাসপোর্ট)</div>
+                                    <div style="display: flex; gap: 4px; margin-top: 4px;">
+                                        <label class="btn btn-sm btn-secondary" style="padding: 3px 8px; font-size: 11px; cursor: pointer;">
+                                            📁 নির্বাচন
+                                            <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event, 'worker')">
+                                        </label>
+                                        <button type="button" class="btn btn-sm" style="padding: 3px 6px; font-size: 11px; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;" onclick="removePhoto('worker')">মুছুন</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nominee Photo -->
+                            <div style="display: flex; align-items: center; gap: 12px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px;">
+                                <div class="photo-preview-frame" style="width: 58px; height: 68px; border: 2px dashed #94a3b8; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
+                                    <img id="nomineePhotoPreview" src="" style="display:none; width: 100%; height: 100%; object-fit: cover;" alt="Nominee">
+                                    <span class="placeholder-text" id="nomineePhotoPlaceholder" style="font-size: 10px; color: #64748b; text-align: center;">নমিনীর ছবি</span>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; font-weight: bold; color: #1e293b;">নমিনীর ছবি (পাসপোর্ট)</div>
+                                    <div style="display: flex; gap: 4px; margin-top: 4px;">
+                                        <label class="btn btn-sm btn-secondary" style="padding: 3px 8px; font-size: 11px; cursor: pointer;">
+                                            📁 নির্বাচন
+                                            <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event, 'nominee')">
+                                        </label>
+                                        <button type="button" class="btn btn-sm" style="padding: 3px 6px; font-size: 11px; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;" onclick="removePhoto('nominee')">মুছুন</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Live Salary Breakdown Preview -->
+                            <div style="flex: 1; min-width: 280px; display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 6px;">
+                                <div style="background: white; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; text-align: center;">
+                                    <div style="font-size: 10px; color: #64748b;">মূল বেতন (Basic)</div>
+                                    <strong id="calcBasic" style="font-size: 13px; color: #0f172a;">০</strong> ৳
+                                </div>
+                                <div style="background: white; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; text-align: center;">
+                                    <div style="font-size: 10px; color: #64748b;">বাড়ি ভাড়া (৫০%)</div>
+                                    <strong id="calcHouseRent" style="font-size: 13px; color: #0f172a;">০</strong> ৳
+                                </div>
+                                <div style="background: white; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; text-align: center;">
+                                    <div style="font-size: 10px; color: #64748b;">স্থির ভাতা</div>
+                                    <span style="font-size: 12px; font-weight: bold; color: #047857;">২,৪৫০ ৳</span>
+                                </div>
+                                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 4px 6px; text-align: center;">
+                                    <div style="font-size: 10px; color: #1d4ed8;">ওভারটাইম হার</div>
+                                    <strong id="calcOtRate" style="font-size: 13px; color: #1d4ed8;">০.০০</strong> ৳/ঘণ্টা
+                                </div>
+                                <div style="display:none;">
+                                    <span id="calcMedical">750</span>
+                                    <span id="calcFood">1250</span>
+                                    <span id="calcConveyance">450</span>
+                                    <span id="calcNewGross">0</span>
+                                    <div id="minWageWarning"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===================================================================== -->
+                        <!-- THE EXACT EXCEL SPREADSHEET 40-ROW ENTRY TABLE (PAGE 1) -->
+                        <!-- ===================================================================== -->
+                        <div class="excel-entry-card" id="excelEntryCard">
+                            <div class="excel-watermark">Page 1</div>
+                            <table class="excel-entry-table">
+                                <tbody>
+                                    <!-- Row 1: নিয়োগের তারিখঃ -->
+                                    <tr>
+                                        <td class="cell-label">নিয়োগের তারিখঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="joining_date_bn" class="excel-cell-input yellow-bg" placeholder="যেমনঃ ০৭.১০.২০২৬" oninput="syncBnDateToEn(this.value)">
+                                        </td>
+                                        <td class="cell-extra">
+                                            <input type="text" id="joining_date_en" class="excel-cell-input" placeholder="2.08.2023" onchange="syncJoiningDate(this.value)" style="text-align:center;">
+                                        </td>
+                                    </tr>
+
+                                    <!-- Row 2: আই.ডি নং- -->
+                                    <tr>
+                                        <td class="cell-label">আই.ডি নং-</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="emp_id_bn" class="excel-cell-input yellow-bg" placeholder="১৬৯৫" oninput="syncNumbers(this.value, 'emp_id_en')" required>
+                                        </td>
+                                        <td class="cell-extra">
+                                            <input type="text" id="emp_id_en" class="excel-cell-input yellow-bg" placeholder="1540" oninput="syncNumbers(this.value, 'emp_id_bn')" required style="text-align:center;">
+                                        </td>
+                                    </tr>
+
+                                    <!-- Row 3: প্রস্তাবিত বেতনঃ -->
+                                    <tr>
+                                        <td class="cell-label">প্রস্তাবিত বেতনঃ</td>
+                                        <td class="cell-value">
+                                            <input type="number" id="gross_salary" class="excel-cell-input yellow-bg" placeholder="৯৮৭৫" oninput="calculateSalary()" required>
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 4: গ্রেডঃ -->
+                                    <tr>
+                                        <td class="cell-label">গ্রেডঃ</td>
+                                        <td class="cell-value">
+                                            <div style="display:flex; height:100%; align-items:center;">
+                                                <input type="text" id="grade" class="excel-cell-input yellow-bg" style="width:30%; font-weight:bold; text-align:center;" placeholder="৫" oninput="onGradeSelectChange(this.value)">
+                                                <select onchange="document.getElementById('grade').value = this.value; onGradeSelectChange(this.value);" style="width:70%; height:100%; border:none; background:#fef08a; font-size:12px; font-weight:bold; cursor:pointer; outline:none; padding:4px;">
+                                                    <option value="">-- গ্রেড নির্বাচন করুন --</option>
+                                                    <option value="৫">গ্রেড ৫ (হেলপার / সহকারী - ১২,৫০০৳)</option>
+                                                    <option value="ট্রেনি">ট্রেনি / শিক্ষানবিশ (৯,৮৭৫৳)</option>
+                                                    <option value="৪">গ্রেড ৪ (সহকারী অপারেটর - ১৩,০২৫৳)</option>
+                                                    <option value="৩">গ্রেড ৩ (সাধারণ অপারেটর - ১৩,৫৫০৳)</option>
+                                                    <option value="২">গ্রেড ২ (সিনিয়র অপারেটর - ১৪,১৫০৳)</option>
+                                                    <option value="১">গ্রেড ১ (প্রধান অপারেটর - ১৪,৭৫০৳)</option>
+                                                    <option value="অন্যান্য">কাস্টম গ্রেড</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 5: পদবী বিষয়ঃ -->
+                                    <tr>
+                                        <td class="cell-label">পদবী বিষয়ঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="designation_bn" class="excel-cell-input yellow-bg" placeholder="হেলপার" oninput="syncDesignation(this.value)">
+                                        </td>
+                                        <td class="cell-extra yellow-bg">
+                                            <input type="text" id="designation_en" class="excel-cell-input yellow-bg" placeholder="Helper" style="text-align:center;">
+                                        </td>
+                                    </tr>
+
+                                    <!-- Row 6: নামঃ -->
+                                    <tr>
+                                        <td class="cell-label">নামঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="name_bn" class="excel-cell-input" placeholder="রিয়াসাদ হোসেন" required>
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 7: NAME: -->
+                                    <tr>
+                                        <td class="cell-label">NAME:</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="name_en" class="excel-cell-input yellow-bg" placeholder="Riyasad hossen" oninput="syncEnglishName(this.value)" required>
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 8: পিতার নামঃ -->
+                                    <tr>
+                                        <td class="cell-label">পিতার নামঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="father_bn" class="excel-cell-input yellow-bg" placeholder="মোঃ দাউদ গাজী">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 9: Fathar Name -->
+                                    <tr>
+                                        <td class="cell-label">Fathar Name</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="father_en" class="excel-cell-input yellow-bg" placeholder="Md Dawudgazi">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 10: মাতার নামঃ -->
+                                    <tr>
+                                        <td class="cell-label">মাতার নামঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="mother_bn" class="excel-cell-input" placeholder="মরিয়ম বেগম">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 11: স্বামী/স্ত্রীর নামঃ -->
+                                    <tr>
+                                        <td class="cell-label">স্বামী/স্ত্রীর নামঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="spouse_bn" class="excel-cell-input" placeholder="প্রযোজ্য ক্ষেত্রে">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 12: স্থায়ী ঠিকানা গ্রামঃ -->
+                                    <tr>
+                                        <td class="cell-label">স্থায়ী ঠিকানা গ্রামঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="perm_village_bn" class="excel-cell-input yellow-bg" placeholder="কালাবগী সুতারখালী">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 13: ডাকঘরঃ -->
+                                    <tr>
+                                        <td class="cell-label">ডাকঘরঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="perm_post_bn" class="excel-cell-input yellow-bg" placeholder="কালাবগী">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 14: থানাঃ -->
+                                    <tr>
+                                        <td class="cell-label">থানাঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="perm_thana_bn" class="excel-cell-input yellow-bg" placeholder="দাকোপ">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 15: জেলাঃ -->
+                                    <tr>
+                                        <td class="cell-label">জেলাঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="perm_dist_bn" class="excel-cell-input yellow-bg" placeholder="খুলনা">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 16: বর্তমান গ্রামঃ -->
+                                    <tr>
+                                        <td class="cell-label">বর্তমান গ্রামঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="pres_village_bn" class="excel-cell-input yellow-bg" placeholder="হরিণধরা">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 17: Address: -->
+                                    <tr>
+                                        <td class="cell-label">Address:</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="pres_village_en" class="excel-cell-input yellow-bg" placeholder="Horndhora">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 18: ডাকঘরঃ -->
+                                    <tr>
+                                        <td class="cell-label">ডাকঘরঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="pres_post_bn" class="excel-cell-input yellow-bg" placeholder="হেমায়েতপুর">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 19: থানাঃ -->
+                                    <tr>
+                                        <td class="cell-label">থানাঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="pres_thana_bn" class="excel-cell-input yellow-bg" placeholder="সাভার">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 20: জেলাঃ -->
+                                    <tr>
+                                        <td class="cell-label">জেলাঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="pres_dist_bn" class="excel-cell-input yellow-bg" placeholder="ঢাকা">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 21: জন্ম তারিখঃ -->
+                                    <tr>
+                                        <td class="cell-label">জন্ম তারিখঃ</td>
+                                        <td class="cell-value">
+                                            <input type="date" id="dob" class="excel-cell-input yellow-bg" onchange="calculateAge()" required>
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 22: বয়সঃ -->
+                                    <tr>
+                                        <td class="cell-label">বয়সঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="calcAge" class="excel-cell-input yellow-bg" readonly placeholder="স্বয়ংক্রিয় হিসাব হবে">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 23: শিক্ষাগত যোগ্যতাঃ -->
+                                    <tr>
+                                        <td class="cell-label">শিক্ষাগত যোগ্যতাঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="education" class="excel-cell-input" placeholder="৮ম শ্রেণী / এসএসসি">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 24: ধর্মঃ -->
+                                    <tr>
+                                        <td class="cell-label">ধর্মঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="religion" class="excel-cell-input yellow-bg" value="ইসলাম">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 25: জাতীয়তাঃ -->
+                                    <tr>
+                                        <td class="cell-label">জাতীয়তাঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="nationality" class="excel-cell-input" value="বাংলাদেশী">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 26: জাতীয় পরিচয় পত্র নং- -->
+                                    <tr>
+                                        <td class="cell-label">জাতীয় পরিচয় পত্র নং-</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="nid_no" class="excel-cell-input yellow-bg" placeholder="৮৭২৯২৩২৮৩৬">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 27: বৈবাহিক অবস্থাঃ -->
+                                    <tr>
+                                        <td class="cell-label">বৈবাহিক অবস্থাঃ</td>
+                                        <td class="cell-value">
+                                            <select id="marital_status" class="excel-cell-input yellow-bg" style="font-weight:600; cursor:pointer;">
+                                                <option value="বিবাহিত">বিবাহীত</option>
+                                                <option value="অবিবাহিত">অবিবাহিত</option>
+                                                <option value="অন্যান্য">অন্যান্য</option>
+                                            </select>
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 28: অভিজ্ঞতাঃ -->
+                                    <tr>
+                                        <td class="cell-label">অভিজ্ঞতাঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="experience_years" class="excel-cell-input" placeholder="০ বছর">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 29: প্রতিষ্ঠানের নামঃ -->
+                                    <tr>
+                                        <td class="cell-label">প্রতিষ্ঠানের নামঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="prev_company" class="excel-cell-input" placeholder="পূর্ববর্তী প্রতিষ্ঠানের নাম">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 30: জরুরী প্রয়োজনে টেলিফোন/মোবাইল নং- -->
+                                    <tr>
+                                        <td class="cell-label">জরুরী প্রয়োজনে টেলিফোন/মোবাইল নং-</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="emergency_mobile" class="excel-cell-input" placeholder="০১XXXXXXXXX">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 31: লাইনঃ -->
+                                    <tr>
+                                        <td class="cell-label">লাইনঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="line_no" class="excel-cell-input" placeholder="০১">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 32: NAME: -->
+                                    <tr>
+                                        <td class="cell-label">NAME:</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="name_en_dup" class="excel-cell-input yellow-bg" placeholder="Riyasad hossen" oninput="syncFromDuplicateName(this.value)">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 33: উচ্চতাঃ -->
+                                    <tr>
+                                        <td class="cell-label">উচ্চতাঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="height_feet" class="excel-cell-input yellow-bg" placeholder="ফুট (৫)">
+                                        </td>
+                                        <td class="cell-extra" style="font-size:12px; font-weight:600; color:#64748b;">ফুট</td>
+                                    </tr>
+
+                                    <!-- Row 34: ওজনঃ -->
+                                    <tr>
+                                        <td class="cell-label">ওজনঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="weight_kg" class="excel-cell-input yellow-bg" placeholder="৬২">
+                                        </td>
+                                        <td class="cell-extra" style="font-size:12px; font-weight:600; color:#64748b;">কেজি</td>
+                                    </tr>
+
+                                    <!-- Row 35: ইঞ্চিঃ -->
+                                    <tr>
+                                        <td class="cell-label">ইঞ্চিঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="height_inch" class="excel-cell-input yellow-bg" placeholder="৬">
+                                        </td>
+                                        <td class="cell-extra" style="font-size:12px; font-weight:600; color:#64748b;">ইঞ্চি</td>
+                                    </tr>
+
+                                    <!-- Row 36: কেজিঃ -->
+                                    <tr>
+                                        <td class="cell-label">কেজিঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="weight_decimal" class="excel-cell-input" placeholder="০" value="০">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 37: GRADE -->
+                                    <tr>
+                                        <td class="cell-label">GRADE</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="grade_display" class="excel-cell-input" placeholder="১" oninput="syncFromDuplicateGrade(this.value)">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 38: DESIGNATION -->
+                                    <tr>
+                                        <td class="cell-label">DESIGNATION</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="designation_display" class="excel-cell-input yellow-bg" placeholder="হেলপার" oninput="syncFromDuplicateDesignation(this.value)">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 39: সনাক্তকরণ চিহ্নঃ -->
+                                    <tr>
+                                        <td class="cell-label">সনাক্তকরণ চিহ্নঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="id_mark" class="excel-cell-input" placeholder="নাই / তিলক চিহ্ন" value="নাই">
+                                        </td>
+                                        <td class="cell-extra"></td>
+                                    </tr>
+
+                                    <!-- Row 40: সেকশনঃ -->
+                                    <tr>
+                                        <td class="cell-label">সেকশনঃ</td>
+                                        <td class="cell-value">
+                                            <input type="text" id="section_bn" class="excel-cell-input yellow-bg" placeholder="কার্টোন">
+                                        </td>
+                                        <td class="cell-extra yellow-bg">
+                                            <input type="text" id="section_en" class="excel-cell-input yellow-bg" placeholder="Carton" style="text-align:center;">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- ===================================================================== -->
+                        <!-- ADDITIONAL AUXILIARY INFORMATION & MODULES (COLLAPSIBLE) -->
+                        <!-- ===================================================================== -->
+                        <details style="margin: 20px auto; max-width: 780px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 18px;" class="no-print">
+                            <summary style="font-weight: bold; color: #1e3a8a; cursor: pointer; font-size: 13.5px;">
+                                ⚙️ অতিরিক্ত তথ্য, ছুটি রেজিস্টার (ফরম - ৯) ও ইনক্রিমেন্ট সেটিংস (ক্লিক করে দেখুন)
+                            </summary>
+
+                            <div style="margin-top: 15px; border-top: 1px solid #cbd5e1; padding-top: 15px;">
+                                <!-- Blood Group & Occupations Grid -->
+                                <div class="form-grid grid-4" style="margin-bottom: 15px;">
+                                    <div class="form-group">
+                                        <label>রক্তের গ্রুপ</label>
+                                        <select id="blood_group">
+                                            <option value="">-- নির্বাচন করুন (ব্লাঙ্ক) --</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>পিতার পেশা</label>
+                                        <input type="text" id="father_occ" placeholder="কৃষক / ব্যবসা">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>মাতার পেশা</label>
+                                        <input type="text" id="mother_occ" placeholder="গৃহিনী">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>স্বামী/স্ত্রীর পেশা</label>
+                                        <input type="text" id="spouse_occ" placeholder="গৃহিনী / চাকরি">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>সন্তান সংখ্যা</label>
+                                        <input type="text" id="children_count" placeholder="০">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ইনক্রিমেন্ট হার (%)</label>
+                                        <select id="increment_pct" onchange="calculateSalary()">
+                                            <option value="9">৯% (বর্তমান নিয়ম)</option>
+                                            <option value="5">৫% (পূর্ববর্তী নিয়ম)</option>
+                                            <option value="10">১০%</option>
+                                            <option value="7">৭%</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ইনক্রিমেন্ট কার্যকর মাস</label>
+                                        <input type="text" id="increment_effective" placeholder="সেপ্টেম্বর, ২০২৬">
+                                    </div>
+                                </div>
+
+                                <!-- LEAVE REGISTER MODULE (FORM 09) -->
+                                <div style="margin-top: 20px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 14px;">
+                                    <div class="flex-between" style="margin-bottom: 10px;">
+                                        <h4 style="margin: 0; color: #1e3a8a; font-size: 14px;">📅 ছুটি রেজিস্টার (ফরম - ৯) ও ছুটির ইতিহাস</h4>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="event.preventDefault(); openAddLeaveModal();">
+                                            ➕ নতুন ছুটি যোগ করুন
+                                        </button>
+                                    </div>
+                                    <div style="overflow-x: auto;">
+                                        <table class="leave-records-table" style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;">
+                                            <thead>
+                                                <tr style="background: #f1f5f9; font-weight: bold;">
+                                                    <th style="border: 1px solid #cbd5e1; padding: 6px;">ছুটির ধরন</th>
+                                                    <th style="border: 1px solid #cbd5e1; padding: 6px;">দিন</th>
+                                                    <th style="border: 1px solid #cbd5e1; padding: 6px;">তারিখ</th>
+                                                    <th style="border: 1px solid #cbd5e1; padding: 6px;">কারণ</th>
+                                                    <th style="border: 1px solid #cbd5e1; padding: 6px;">অনুমোদনকারী</th>
+                                                    <th style="border: 1px solid #cbd5e1; padding: 6px;">মুছুন</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="leaveRecordsTableBody">
+                                                <tr>
+                                                    <td colspan="6" style="padding: 12px; color: #64748b;">কোনো ছুটির রেকর্ড যোগ করা হয়নি</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div style="display: none;">
+                                        <input type="text" id="leave_cl_taken" value="0">
+                                        <input type="text" id="leave_sl_taken" value="0">
+                                        <input type="text" id="leave_el_taken" value="0">
+                                        <input type="text" id="leave_start_date" value="">
+                                    </div>
+                                </div>
+
+                                <!-- SEPARATION & SETTLEMENT MODULE -->
+                                <div style="margin-top: 20px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 14px;">
+                                    <h4 style="margin: 0 0 10px 0; color: #1e3a8a; font-size: 14px;">🚪 চাকরি অবসান ও ফাইনাল সেটেলমেন্ট</h4>
+                                    <div class="form-grid grid-4">
+                                        <div class="form-group">
+                                            <label>নোটিশের ধরন</label>
+                                            <select id="notice_type">
+                                                <option value="প্রথম">প্রথম নোটিশ</option>
+                                                <option value="দ্বিতীয়">দ্বিতীয় নোটিশ</option>
+                                                <option value="চূড়ান্ত">চূড়ান্ত নোটিশ</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>অনুপস্থিতির শুরুর তারিখ</label>
+                                            <input type="text" id="notice_absent_date" placeholder="যেমনঃ ০৫.০৮.২০২৬">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>নোটিশ জারির তারিখ</label>
+                                            <input type="text" id="notice_issue_date" placeholder="যেমনঃ ১৫.০৮.২০২৬">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>রেজিস্ট্রি ডাক ট্র্যাকিং নং</label>
+                                            <input type="text" id="notice_tracking_no" placeholder="RL-123456789BD">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>অব্যাহতি / অবসানের তারিখ</label>
+                                            <input type="date" id="separation_date" onchange="calculateFinalSettlement()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>অবসানের কারণ</label>
+                                            <select id="separation_reason">
+                                                <option value="পদত্যাগ">স্বেচ্ছায় পদত্যাগ (ধারা ২৭)</option>
+                                                <option value="বরখাস্ত">শাস্তিমূলক বরখাস্ত (ধারা ২৩/২৪)</option>
+                                                <option value="ছাঁটাই">ছাঁটাই / রিট্রেঞ্চমেন্ট (ধারা ২০)</option>
+                                                <option value="অবসর">স্বাভাবিক অবসর (ধারা ২৮)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>শেষ মাসের কাজের দিন</label>
+                                            <input type="number" id="last_month_days" value="0" oninput="calculateFinalSettlement()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>অর্জিত ছুটি পাওনা (দিন)</label>
+                                            <input type="number" id="el_balance_days" value="0" oninput="calculateFinalSettlement()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>নোটিশ পে বা ক্ষতিপূরণ দিন</label>
+                                            <input type="number" id="notice_pay_days" value="0" oninput="calculateFinalSettlement()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>কর্তন (অগ্রিম/লোন/অন্যান্য ৳)</label>
+                                            <input type="number" id="settlement_deduction" value="0" oninput="calculateFinalSettlement()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>গণনাকৃত চাকরির মেয়াদ</label>
+                                            <input type="text" id="calcServicePeriod" readonly class="bg-readonly">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>মোট নিট প্রদেয় টাকা</label>
+                                            <input type="text" id="calcNetPayable" readonly class="bg-readonly" style="font-weight:700; color:#15803d; font-size:15px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <div class="form-actions-bottom" style="margin-top: 25px; text-align: center;">
+                            <button type="submit" class="btn btn-success btn-lg" style="padding: 12px 35px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">
+                                <span>💾</span> কর্মচারীর তথ্য ডাটাবেজে সংরক্ষণ করুন
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TAB 1: চাকরির আবেদন পত্র (ABEDON POTRO) -->
+            <div id="tab-1" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-abedon">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-header-simple">
+                        <div class="header-left">
+                            <p>বরাবর</p>
+                            <p><strong>ব্যবস্থাপনা পরিচালক</strong></p>
+                            <p><strong class="printFactoryNameBn">ফেয়ার পলি লিঃ</strong></p>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার ঢাকা।</p>
+                        </div>
+                        <div class="header-center" style="display:flex; justify-content:center; align-items:flex-start;">
+                            <div class="doc-photo-box">
+                                <img class="doc-worker-photo docWorkerPhotoImg" src="" style="display:none;" alt="Worker Photo">
+                                <span class="doc-photo-placeholder docWorkerPhotoPlaceholder">প্রার্থীর ছবি<br>(পাসপোর্ট সাইজ)</span>
+                            </div>
+                        </div>
+                        <div class="header-right office-box">
+                            <div class="office-box-title">অফিস কর্তৃক পূরণীয়</div>
+                            <table class="office-table">
+                                <tr><td>নিয়োগের তারিখঃ</td><td><strong class="d-joining-bn"></strong></td></tr>
+                                <tr><td>আই.ডি নং-</td><td><strong class="d-id-bn"></strong></td></tr>
+                                <tr><td>প্রস্তাবিত বেতনঃ</td><td><strong class="d-gross"></strong>/-</td></tr>
+                                <tr><td>গ্রেডঃ</td><td><strong class="d-grade"></strong></td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="subject-line">
+                        <strong>বিষয়ঃ <span class="d-designation-bn"></span> পদে চাকুরীর জন্য আবেদন।</strong>
+                    </div>
+
+                    <div class="salutation">মহোদয়,</div>
+                    <p class="body-para">
+                        বিনীত নিবেদন এই যে, আমি বিশ্বস্ত সূত্রে জানতে পারলাম যে আপনি আপনার প্রতিষ্ঠানে কিছু সংখ্যক 
+                        <strong class="d-designation-bn"></strong> পদে নিয়োগ করবেন। আমি উক্ত পদের জন্য একজন প্রার্থী/প্রার্থিনী হিসাবে 
+                        নিম্নে আমার জীবন বৃত্তান্ত উল্লেখ করলাম।
+                    </p>
+
+                    <table class="bio-table">
+                        <tr>
+                            <td class="w-25">১. নামঃ</td>
+                            <td><strong class="d-name-bn"></strong></td>
+                            <td class="w-20">পেশাঃ</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>২. পিতার নামঃ</td>
+                            <td><span class="d-father-bn"></span></td>
+                            <td>পেশাঃ</td>
+                            <td><span class="d-father-occ"></span></td>
+                        </tr>
+                        <tr>
+                            <td>৩. মাতার নামঃ</td>
+                            <td><span class="d-mother-bn"></span></td>
+                            <td>পেশাঃ</td>
+                            <td><span class="d-mother-occ"></span></td>
+                        </tr>
+                        <tr>
+                            <td>৪. স্বামী/স্ত্রীর নামঃ</td>
+                            <td><span class="d-spouse-bn">-</span></td>
+                            <td>পেশাঃ</td>
+                            <td><span class="d-spouse-occ">-</span></td>
+                        </tr>
+                        <tr>
+                            <td>৫. স্থায়ী ঠিকানাঃ</td>
+                            <td colspan="3">
+                                গ্রামঃ <span class="d-perm-village"></span>, 
+                                ডাকঘরঃ <span class="d-perm-post"></span>, 
+                                থানাঃ <span class="d-perm-thana"></span>, 
+                                জেলাঃ <span class="d-perm-dist"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>৬. বর্তমান ঠিকানাঃ</td>
+                            <td colspan="3">
+                                গ্রামঃ <span class="d-pres-village"></span>, 
+                                ডাকঘরঃ <span class="d-pres-post"></span>, 
+                                থানাঃ <span class="d-pres-thana"></span>, 
+                                জেলাঃ <span class="d-pres-dist"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>৭. জন্ম তারিখঃ</td>
+                            <td><span class="d-dob"></span></td>
+                            <td>বয়সঃ</td>
+                            <td><span class="d-age"></span></td>
+                        </tr>
+                        <tr>
+                            <td>৮. শিক্ষাগত যোগ্যতাঃ</td>
+                            <td><span class="d-education"></span></td>
+                            <td>ধর্মঃ</td>
+                            <td><span class="d-religion"></span></td>
+                        </tr>
+                        <tr>
+                            <td>৯. জাতীয়তাঃ</td>
+                            <td><span class="d-nationality"></span></td>
+                            <td>এনআইডি নং-</td>
+                            <td><span class="d-nid"></span></td>
+                        </tr>
+                        <tr>
+                            <td>১০. বৈবাহিক অবস্থাঃ</td>
+                            <td><span class="d-marital"></span></td>
+                            <td>সন্তান সংখ্যাঃ</td>
+                            <td><span class="d-children"></span> টি</td>
+                        </tr>
+                        <tr>
+                            <td>১১. অভিজ্ঞতাঃ</td>
+                            <td><span class="d-exp"></span> বছর</td>
+                            <td>প্রতিষ্ঠানের নামঃ</td>
+                            <td><span class="d-prev-comp">-</span></td>
+                        </tr>
+                        <tr>
+                            <td>১২. জরুরী যোগাযোগঃ</td>
+                            <td>মোবাইলঃ <span class="d-mobile"></span></td>
+                            <td>নামঃ</td>
+                            <td><span class="d-father-bn"></span></td>
+                        </tr>
+                    </table>
+
+                    <div class="closing-para">
+                        অতএব মহোদয়ের সমীপে আকুল আবেদন এই যে, আমার উপরোক্ত তথ্যাবলী বিবেচনা করতঃ আমাকে উক্ত পদে নিয়োগ দানে বাধিত করবেন।
+                    </div>
+
+                    <div class="signature-grid-3 mt-40">
+                        <div class="sig-col">
+                            <div class="sig-line">এইচ.আর এন্ড কমপ্লায়েন্স অফিসার</div>
+                        </div>
+                        <div class="sig-col text-center">
+                            <div class="sig-line">অনুমোদিত</div>
+                        </div>
+                        <div class="sig-col text-right">
+                            <p>আপনার বিশ্বস্তঃ</p>
+                            <div class="sig-line">আবেদনকারীর স্বাক্ষর</div>
+                            <p>পূর্ণ নামঃ <span class="d-name-bn"></span></p>
+                            <p>তারিখঃ <span class="d-joining-bn"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: বয়স ও স্বাস্থ্য পরীক্ষা ফরম (AGE FROM) -->
+            <div id="tab-2" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-age">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-title-center">
+                        <h3 class="underlined-title">Age Estimation & Fitness Form (বয়স ও স্বাস্থ্য প্রত্যয়ন ফরম)</h3>
+                    </div>
+
+                    <div class="flex-between" style="align-items:flex-start; gap:16px;">
+                        <div style="flex-grow:1;">
+                            <h4 class="subheading" style="margin-top:0;">কর্মীর ব্যক্তিগত তথ্যাবলীঃ</h4>
+                            <table class="grid-table compact-table" style="margin-top:4px;">
+                                <tr><td class="w-20">১. নামঃ</td><td><strong class="d-name-bn"></strong></td><td class="w-20">৫. উচ্চতাঃ</td><td><span class="d-height"></span></td></tr>
+                                <tr><td>২. পিতার নামঃ</td><td><span class="d-father-bn"></span></td><td>৬. ওজনঃ</td><td><span class="d-weight"></span> কেজি</td></tr>
+                                <tr><td>৩. স্বামী/স্ত্রীর নামঃ</td><td><span class="d-spouse-bn">-</span></td><td>৭. রক্তের গ্রুপঃ</td><td><span class="d-blood"></span></td></tr>
+                                <tr><td>৪. মাতার নামঃ</td><td><span class="d-mother-bn"></span></td><td>৮. বৈবাহিক অবস্থাঃ</td><td><span class="d-marital"></span></td></tr>
+                                <tr><td>বর্তমান ঠিকানাঃ</td><td colspan="3"><span class="d-pres-full"></span></td></tr>
+                                <tr><td>সনাক্তকরণ চিহ্নঃ</td><td colspan="3"><span class="d-id-mark">নাই</span></td></tr>
+                            </table>
+                        </div>
+                        <div class="doc-photo-box" style="margin-top: 22px;">
+                            <img class="doc-worker-photo docWorkerPhotoImg" src="" style="display:none;" alt="Worker Photo">
+                            <span class="doc-photo-placeholder docWorkerPhotoPlaceholder">কর্মীর ছবি<br>(পাসপোর্ট সাইজ)</span>
+                        </div>
+                    </div>
+
+                    <div class="statement-box">
+                        <strong>কর্মীর স্বীকারোক্তিঃ</strong><br>
+                        আমি সজ্ঞানে, সুস্থ মস্তিষ্কে আমার বয়স নির্ধারণের জন্য নিম্নস্বাক্ষরকারী ডাক্তারকে ডাক্তারী পরীক্ষা করার অনুমতি দিলাম এবং ডাক্তার কর্তৃক নির্ধারিত বয়সই আমার প্রকৃত বয়স হিসাবে মানিয়া নিব এই মর্মে অঙ্গীকার করিলাম।
+                        <div class="flex-between mt-10">
+                            <span>তারিখঃ <span class="d-joining-bn"></span></span>
+                            <span>কর্মীর স্বাক্ষরঃ .................................................</span>
+                        </div>
+                    </div>
+
+                    <div class="medical-section">
+                        <h4 class="medical-title">MEDICAL EXAMINATION (ডাক্তারী পরীক্ষা)</h4>
+                        <table class="grid-table compact-table">
+                            <tr>
+                                <td class="w-30">TEETH (দাঁত)</td>
+                                <td>Second Molar: Present / Absent | Third Molar: Present / Absent</td>
+                            </tr>
+                            <tr>
+                                <td>PHYSICAL DEVELOPMENT</td>
+                                <td>General Health: Sound & Healthy | Mental Status: Normal</td>
+                            </tr>
+                            <tr>
+                                <td>SECONDARY SEX CHARACTER</td>
+                                <td>Change of Voice: Yes | Mustache/Beard: Present | Axillary Hair: Present</td>
+                            </tr>
+                            <tr>
+                                <td>VISION & HEARING</td>
+                                <td>Vision: Normal 6/6 | Hearing: Normal</td>
+                            </tr>
+                        </table>
+
+                        <div class="doctor-certificate mt-20">
+                            <h4 class="text-center"><u>TO WHOM IT MAY CONCERN</u></h4>
+                            <p class="mt-10" style="line-height: 1.8;">
+                                This is to certify that Mr./Mrs. <strong class="d-name-en"></strong>, 
+                                S/o, D/o, W/o: <strong><span class="d-father-en"></span></strong>, 
+                                Address: <strong><span class="d-pres-en"></span></strong>, has been physically examined by me.
+                                According to the physical and clinical examination, his/her approximate age is <strong class="d-age-years"></strong> Years and he/she is mentally and physically <strong>FIT FOR FACTORY WORK</strong> under the Bangladesh Labour Act, 2006.
+                            </p>
+
+                            <div class="signature-grid-2 mt-40">
+                                <div>
+                                    <p>তারিখঃ <span class="d-joining-bn"></span></p>
+                                </div>
+                                <div class="text-right">
+                                    <br>
+                                    <div class="sig-line">Registered Factory Medical Officer<br>Signature & Official Seal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: নিয়োগপত্র (JOINING LETTER) -->
+            <div id="tab-3" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-joining">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-title-center">
+                        <h3 class="underlined-title">নিয়োগপত্র (APPOINTMENT LETTER)</h3>
+                    </div>
+
+                    <div class="flex-between" style="align-items:flex-start; gap:16px;">
+                        <table class="app-recipient-table" style="flex-grow:1; margin:0;">
+                            <tr>
+                                <td><strong>প্রতিঃ</strong> <strong class="d-name-bn"></strong></td>
+                                <td><strong>আই.ডি নং-</strong> <strong class="d-id-bn"></strong></td>
+                                <td><strong>পিতা/স্বামীঃ</strong> <span class="d-father-bn"></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <strong>ঠিকানাঃ</strong> গ্রামঃ <span class="d-pres-village"></span>, পোষ্টঃ <span class="d-pres-post"></span>, থানাঃ <span class="d-pres-thana"></span>, জেলাঃ <span class="d-pres-dist"></span>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="doc-photo-box">
+                            <img class="doc-worker-photo docWorkerPhotoImg" src="" style="display:none;" alt="Worker Photo">
+                            <span class="doc-photo-placeholder docWorkerPhotoPlaceholder">কর্মীর ছবি<br>(পাসপোর্ট সাইজ)</span>
+                        </div>
+                    </div>
+
+                    <p class="body-para mt-10">
+                        আপনার <strong><span class="d-joining-bn"></span></strong> তারিখের চাকুরীর আবেদনের প্রেক্ষিতে জানানো যাচ্ছে যে, কর্তৃপক্ষ আপনাকে নিম্নলিখিত শর্ত সাপেক্ষে <strong><span class="d-joining-bn"></span></strong> তারিখ হইতে <strong><span class="d-designation-bn"></span></strong> পদে নিয়োগ প্রদান করছেঃ-
+                    </p>
+
+                    <div class="wage-box">
+                        <table class="salary-breakdown-table">
+                            <tr>
+                                <td>১. আপনার গ্রেডঃ</td>
+                                <td><strong class="d-grade"></strong></td>
+                                <td>মুল বেতনঃ</td>
+                                <td><strong class="d-basic"></strong> টাকা</td>
+                            </tr>
+                            <tr>
+                                <td>বাড়ি ভাড়া ভাতা (৫০%):</td>
+                                <td><strong class="d-house-rent"></strong> টাকা</td>
+                                <td>চিকিৎসা ভাতাঃ</td>
+                                <td><strong class="d-medical"></strong> টাকা</td>
+                            </tr>
+                            <tr>
+                                <td>খাদ্য ভাতাঃ</td>
+                                <td><strong class="d-food"></strong> টাকা</td>
+                                <td>যাতায়াত ভাতাঃ</td>
+                                <td><strong class="d-conveyance"></strong> টাকা</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>মোট নির্ধারিত বেতনঃ</strong></td>
+                                <td><strong><span class="d-gross"></span> টাকা</strong></td>
+                                <td><strong>ওটি হার (প্রতি ঘণ্টা):</strong></td>
+                                <td><strong><span class="d-ot-rate"></span> টাকা</strong> (মুল বেতনের দ্বিগুণ)</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <ol class="terms-list mt-10">
+                        <li>আপনি কারখানার নিয়ম অনুযায়ী অন্যান্য আর্থিক সুবিধা যেমন বাৎসরিক বেতন বৃদ্ধি, ঈদ-বোনাস, হাজিরা বোনাস (শর্ত সাপেক্ষে) ভোগ করবেন।</li>
+                        <li>আপনি কমপক্ষে তিন মাস শিক্ষানবিশ/অপেক্ষাধীন হিসাবে কর্মরত থাকবেন। আপনার কর্মদক্ষতা ও শৃংখলার ভিত্তিতে সন্তোষজনক হলে পরবর্তীতে স্থায়ী করা হবে।</li>
+                        <li>অপেক্ষাধীন সময়ের মধ্যে কোন কারণ দর্শানো ছাড়াই কর্তৃপক্ষ নিয়োগ বাতিল করার অধিকার সংরক্ষণ করে।</li>
+                        <li>আপনি চাকুরী হইতে ইস্তফা দিতে চাইলে কর্তৃপক্ষ বরাবর ৬০ (ষাট) দিন পূর্বে লিখিত নোটিশ করতে হবে অথবা নোটিশের সমপরিমাণ ক্ষতিপূরণ প্রদান করতে হবে। অনুরূপভাবে কর্তৃপক্ষ চাকুরি অবসান করলে প্রচলিত শ্রম আইন অনুযায়ী লিখিত নোটিশ ও উপযুক্ত ক্ষতিপূরণ প্রদান করা হবে।</li>
+                        <li>কাজ চলাকালীন সময় কর্তৃপক্ষের অনুমতি ব্যতীত কর্মস্থল ত্যাগ করা বা কর্মস্থলে কোনো প্রকার অশোভন আচরণ/হয়রানি করা সম্পূর্ণ নিষিদ্ধ।</li>
+                        <li>কারখানার সাপ্তাহিক কার্যদিবস ৬ (ছয়) দিন। প্রতি শুক্রবার সাপ্তাহিক ছুটি প্রদান করা হয়। কোনো শ্রমিক দৈনিক ৮ ঘণ্টা ও সপ্তাহে ৪৮ ঘণ্টার বেশি কাজ করলে অতিরিক্ত কাজের জন্য দ্বিগুণ হারে ওভারটাইম প্রাপ্য হবেন।</li>
+                        <li>আপনি নিয়মানুযায়ী বছরে নিম্নলিখিত ছুটি ভোগ করতে পারবেনঃ নৈমিত্তিক ছুটি ১০ দিন, অসুস্থতাজনিত ছুটি ১৪ দিন, উৎসব ছুটি ১৪ দিন, অর্জিত ছুটি প্রতি ১৮ কার্যদিবসে ১ দিন হারে।</li>
+                        <li>কারখানার অভ্যন্তরে মোবাইল ফোন ব্যবহার করা সম্পূর্ণ নিষিদ্ধ (হেলপার, অপারেটর, কোয়ালিটি, সুপারভাইজারদের ক্ষেত্রে)।</li>
+                    </ol>
+
+                    <p class="mt-10" style="font-size: 13px;">
+                        যদি উপরোল্লিখিত শর্তে আপনি চাকুরীতে যোগদানে সম্মত থাকেন তবে এই নিয়োগ পত্রের অনুলিপিতে স্বাক্ষর করে মানব সম্পদ বিভাগে জমা দেয়ার জন্য অনুরোধ করা হলো।
+                    </p>
+
+                    <div class="signature-grid-2 mt-30">
+                        <div>
+                            <p><strong>ধন্যবাদান্তে-</strong></p>
+                            <br>
+                            <div class="sig-line">কর্তৃপক্ষ / মানবসম্পদ বিভাগ</div>
+                        </div>
+                        <div class="text-right">
+                            <p>শর্তসমূহ পড়িয়া বুঝিয়া স্বজ্ঞানে স্বাক্ষর করিলাম-</p>
+                            <br>
+                            <div class="sig-line">শ্রমিকের স্বাক্ষর ও তারিখ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: পরিচয়পত্র (EMPLOYEE ID CARD - FRONT & BACK WITH LOGO, CENTERED PHOTO & QR CODE) -->
+            <div id="tab-4" class="tab-pane printable-page">
+                <div class="doc-page a4-page flex-center" id="doc-id-card">
+                    <div class="id-cards-wrapper">
+                        
+                        <!-- ID CARD FRONT -->
+                        <div class="id-card">
+                            <!-- 1. HEADER WITH LOGO -->
+                            <div class="id-header">
+                                <img class="id-header-logo printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                                <div class="id-header-text">
+                                    <h3 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h3>
+                                    <p class="printFactoryNameEn">FAIR POLY LTD.</p>
+                                </div>
+                            </div>
+
+                            <!-- 2. PHOTO CENTERED RIGHT BELOW HEADER -->
+                            <div class="id-photo-centered">
+                                <div class="id-photo-box" id="idCardPhotoBox">
+                                    <span class="id-photo-placeholder" id="idPhotoPlaceholder">ছবি</span>
+                                    <img id="idCardPhotoImg" src="" style="display:none;" alt="Employee Photo">
+                                </div>
+                            </div>
+
+                            <!-- 3. DETAILS BELOW PHOTO -->
+                            <table class="id-details-table">
+                                <tr><td class="id-lbl">আইডি নংঃ</td><td class="id-val"><strong><span class="d-id-bn"></span></strong></td></tr>
+                                <tr><td class="id-lbl">নামঃ</td><td class="id-val"><strong><span class="d-name-bn"></span></strong></td></tr>
+                                <tr><td class="id-lbl">NAME:</td><td class="id-val"><span class="d-name-en"></span></td></tr>
+                                <tr><td class="id-lbl">পদবীঃ</td><td class="id-val"><span class="d-designation-bn"></span></td></tr>
+                                <tr><td class="id-lbl">সেকশনঃ</td><td class="id-val"><span class="d-section-bn"></span></td></tr>
+                                <tr><td class="id-lbl">যোগদানঃ</td><td class="id-val"><span class="d-joining-bn"></span></td></tr>
+                                <tr><td class="id-lbl">রক্তের গ্রুপঃ</td><td class="id-val"><strong><span class="d-blood"></span></strong></td></tr>
+                                <tr><td class="id-lbl">মেয়াদঃ</td><td class="id-val">যোগদান হতে ২ বছর</td></tr>
+                            </table>
+
+                            <div class="id-footer">
+                                <div>শ্রমিকের স্বাক্ষর</div>
+                                <div>ব্যবস্থাপকের স্বাক্ষর</div>
+                            </div>
+                        </div>
+
+                        <!-- ID CARD BACK (WITH AUTOMATIC QR CODE) -->
+                        <div class="id-card id-card-back">
+                            <div class="back-header">
+                                <h4>জরুরী তথ্যাবলী ও ভেরিফিকেশন</h4>
+                            </div>
+
+                            <!-- AUTO-GENERATED QR CODE -->
+                            <div class="id-qr-box">
+                                <img id="idCardQrImg" src="/api/qrcode?text=Fair%20Poly%20Ltd." alt="QR Code">
+                                <span class="qr-caption">স্ক্যান করে আবেদনের তথ্য যাচাই করুন</span>
+                            </div>
+
+                            <div class="id-back-info">
+                                <p><strong>এনআইডি নংঃ</strong> <span class="d-nid"></span></p>
+                                <p><strong>জরুরি যোগাযোগঃ</strong> <span class="d-mobile"></span></p>
+                                <p><strong>পিতাঃ</strong> <span class="d-father-bn"></span></p>
+                                <p><strong>স্থায়ী ঠিকানাঃ</strong> গ্রামঃ <span class="d-perm-village"></span>, ডাকঃ <span class="d-perm-post"></span>, জেলাঃ <span class="d-perm-dist"></span></p>
+                            </div>
+                            
+                            <div class="company-address-box">
+                                <strong class="printFactoryNameBn">ফেয়ার পলি লিঃ</strong><br>
+                                <span class="printFactoryAddress">কান্দিবলিয়াপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</span><br>
+                                ফোনঃ <span class="printFactoryPhone">০১৭৭৭-৬৭৬৫২৬</span>
+                            </div>
+                            <p class="lost-notice">কার্ডটি হারিয়ে গেলে তাৎক্ষণিক কর্তৃপক্ষকে অবহিত করুন।</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: বাৎসরিক বেতন বৃদ্ধি পত্র (INCREMENT LETTER) -->
+            <div id="tab-5" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-increment">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-title-center">
+                        <h3 class="underlined-title">বাৎসরিক বেতন বৃদ্ধি পত্র (Annual Salary Increment Letter)</h3>
+                    </div>
+
+                    <div class="flex-between mt-20">
+                        <div>
+                            <p><strong>নামঃ</strong> <strong class="d-name-bn"></strong></p>
+                            <p><strong>আই ডি নংঃ</strong> <strong class="d-id-bn"></strong></p>
+                            <p><strong>পদবীঃ</strong> <span class="d-designation-bn"></span></p>
+                            <p><strong>সেকশনঃ</strong> <span class="d-section-bn"></span></p>
+                        </div>
+                        <div class="text-right">
+                            <p><strong>তারিখঃ</strong> <span class="d-inc-today"></span></p>
+                            <p><strong>নিয়োগের তারিখঃ</strong> <span class="d-joining-bn"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="subject-line mt-15">
+                        <strong>বিষয়ঃ <span class="d-inc-pct"></span>% বাৎসরিক বেতন বৃদ্ধি প্রসঙ্গে।</strong>
+                    </div>
+
+                    <p class="body-para mt-10">
+                        জনাব,<br>
+                        শুভেচ্ছা নিবেন। আপনার অবগতির জন্য জানানো যাচ্ছে যে, কর্তৃপক্ষ সরকার ও কারখানা নির্ধারিত বাৎসরিক 
+                        <strong><span class="d-inc-pct"></span>%</strong> বেতন বৃদ্ধির সিদ্ধান্ত নিয়েছে। আপনার নতুন বেতন কাঠামো নিম্নরূপ হবে, যাহা 
+                        <strong><span class="d-inc-month"></span></strong> মাস হতে কার্যকর হবে।
+                    </p>
+
+                    <!-- CURRENT SALARY STRUCTURE -->
+                    <h4 class="table-caption mt-15">১. বর্তমান বেতন কাঠামোঃ</h4>
+                    <table class="salary-grid-table">
+                        <thead>
+                            <tr>
+                                <th>মূল বেতন (Basic)</th>
+                                <th>বাড়ী ভাড়া (৫০%)</th>
+                                <th>চিকিৎসা ভাতা</th>
+                                <th>খাদ্য ভাতা</th>
+                                <th>যাতায়াত ভাতা</th>
+                                <th class="th-total">বর্তমান নির্ধারিত বেতন</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="d-basic"></span> ৳</td>
+                                <td><span class="d-house-rent"></span> ৳</td>
+                                <td><span class="d-medical"></span> ৳</td>
+                                <td><span class="d-food"></span> ৳</td>
+                                <td><span class="d-conveyance"></span> ৳</td>
+                                <td><strong><span class="d-gross"></span> ৳</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- INCREMENTED SALARY STRUCTURE -->
+                    <h4 class="table-caption mt-20">২. <span class="d-inc-pct"></span>% বর্ধিত নতুন বেতন কাঠামোঃ</h4>
+                    <table class="salary-grid-table highlight-table">
+                        <thead>
+                            <tr>
+                                <th>নতুন মূল বেতন (Basic)</th>
+                                <th>নতুন বাড়ী ভাড়া (৫০%)</th>
+                                <th>চিকিৎসা ভাতা</th>
+                                <th>খাদ্য ভাতা</th>
+                                <th>যাতায়াত ভাতা</th>
+                                <th class="th-total">নতুন সর্বমোট বেতন</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong class="d-new-basic"></strong> ৳</td>
+                                <td><strong class="d-new-house"></strong> ৳</td>
+                                <td><span class="d-medical"></span> ৳</td>
+                                <td><span class="d-food"></span> ৳</td>
+                                <td><span class="d-conveyance"></span> ৳</td>
+                                <td><strong class="text-primary-large"><span class="d-new-gross"></span> ৳</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="mt-20">
+                        আশা করি আপনি আপনার কর্মদক্ষতা, নিষ্ঠা ও শৃংখলা বজায় রেখে কারখানার উৎপাদন বৃদ্ধিতে আরো সচেষ্ট ভূমিকা পালন করবেন।
+                    </p>
+
+                    <div class="signature-grid-3 mt-40">
+                        <div>
+                            <div class="sig-line">ম্যানেজার<br>(এইচ.আর এন্ড কমপ্লায়েন্স)</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="sig-line">প্রোডাকশন ম্যানেজার</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="sig-line">পরিচালকের স্বাক্ষর</div>
+                        </div>
+                    </div>
+
+                    <div class="copy-to mt-30">
+                        <strong>অনুলিপিঃ</strong>
+                        <ol>
+                            <li>হিসাব বিভাগ</li>
+                            <li>ব্যক্তিগত নথি (Personal File)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: কর্মদক্ষতা মূল্যায়ন ফরম (PERFORMANCE APPRAISAL WITH TICKS/CROSSES & SCORE DROPDOWNS) -->
+            <div id="tab-6" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-appraisal">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-title-center">
+                        <h3 class="underlined-title">Performance Appraisal Form (কর্মদক্ষতা মূল্যায়ন ফরম)</h3>
+                    </div>
+
+                    <table class="grid-table compact-table mt-10">
+                        <tr>
+                            <td><strong>Employee Name:</strong> <strong class="d-name-en"></strong></td>
+                            <td><strong>ID No:</strong> <strong class="d-id-en"></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Designation:</strong> <span class="d-designation-en"></span></td>
+                            <td><strong>Dept. / Section:</strong> <span class="d-section-en"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recruitment Date:</strong> <span class="d-joining-bn"></span></td>
+                            <td><strong>Current Wages:</strong> <span class="d-gross"></span> Tk</td>
+                        </tr>
+                    </table>
+
+                    <div class="rating-legend mt-10">
+                        <strong>Rating Scale:</strong> 
+                        A = Excellent (চমৎকার) | B = Good / Satisfactory (সন্তোষজনক) | 
+                        C = Needs Improvement (উন্নতি প্রয়োজন) | D = Poor (অসন্তোষজনক)
+                    </div>
+
+                    <!-- INTERACTIVE EVALUATION TABLE WITH TICKS & CROSSES AND SCORE DROPDOWNS -->
+                    <table class="grid-table appraisal-table mt-10">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">Sl</th>
+                                <th style="width: 45%;">Evaluation Criteria (মূল্যায়ন বিষয়)</th>
+                                <th style="width: 10%;">A</th>
+                                <th style="width: 10%;">B</th>
+                                <th style="width: 10%;">C</th>
+                                <th style="width: 10%;">D</th>
+                                <th style="width: 10%;">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appraisalTbody">
+                            <!-- Populated with dropdowns for ticks/crosses and scores -->
+                        </tbody>
+                    </table>
+
+                    <div class="flex-between mt-15">
+                        <div>
+                            <strong>সার্বিক মূল্যায়ন গ্রেড (Overall Score): </strong>
+                            <select id="overallScoreSelect" class="appraisal-select" style="width:120px;" onchange="saveAppraisal()">
+                                <option value="A">A (চমৎকার)</option>
+                                <option value="B" selected>B (সন্তোষজনক)</option>
+                                <option value="C">C (উন্নতি প্রয়োজন)</option>
+                                <option value="D">D (অসন্তোষজনক)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <strong>কার্যকরের তারিখঃ</strong> <span class="d-today"></span>
+                        </div>
+                    </div>
+
+                    <div class="signature-grid-3 mt-40">
+                        <div>
+                            <div class="sig-line">সুপারভাইজারের মন্তব্য ও স্বাক্ষর</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="sig-line">বিভাগীয় প্রধানের স্বাক্ষর</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="sig-line">ম্যানেজার (এইচ.আর এন্ড এডমিন)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: ছুটি রেজিস্টার (LEAVE REGISTER - FORM 9 AUTOMATED) -->
+            <div id="tab-7" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-leave">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-title-center">
+                        <h2 style="font-size:20px;">ছুটির রেজিস্টার (ফরম - ৯)</h2>
+                        <p>[বাংলাদেশ শ্রম বিধিমালা ২০১৫ - বিধি ১১ এবং ধারা ১০, ১১৫, ১১৬ ও ১১৭]</p>
+                    </div>
+
+                    <table class="grid-table compact-table mt-10">
+                        <tr>
+                            <td><strong>প্রতিষ্ঠানের নামঃ</strong> <span class="printFactoryNameBn">ফেয়ার পলি লিঃ</span></td>
+                            <td><strong>আইডি নং-</strong> <strong class="d-id-bn"></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>শ্রমিকের নামঃ</strong> <strong class="d-name-bn"></strong></td>
+                            <td><strong>পদবীঃ</strong> <span class="d-designation-bn"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>বিভাগ/সেকশনঃ</strong> <span class="d-section-bn"></span></td>
+                            <td><strong>নিয়োগের তারিখঃ</strong> <span class="d-joining-bn"></span></td>
+                        </tr>
+                    </table>
+
+                    <table class="leave-grid-table mt-15">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">ছুটির তারিখ / বিবরণ</th>
+                                <th colspan="3">মঞ্জুরীকৃত ছুটির বিবরণ</th>
+                                <th colspan="3">অবশিষ্ট ছুটির ব্যালেন্স</th>
+                                <th rowspan="2">কর্তৃপক্ষের স্বাক্ষর</th>
+                                <th rowspan="2">শ্রমিকের স্বাক্ষর</th>
+                            </tr>
+                            <tr>
+                                <th>নৈমিত্তিক (১০ দিন)</th>
+                                <th>অসুস্থতা (১৪ দিন)</th>
+                                <th>অর্জিত ছুটি (১৮ দিন)</th>
+                                <th>নৈমিত্তিক</th>
+                                <th>অসুস্থতা</th>
+                                <th>অর্জিত</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaveRegisterTbody">
+                            <!-- Populated dynamically from employee leave records -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 8: গেট পাস (GATE PASS) -->
+            <div id="tab-8" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-gatepass">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-title-center">
+                        <h3 class="underlined-title">প্রাথমিক নির্বাচন ও গেট পাস (ENTRY GATE PASS)</h3>
+                    </div>
+
+                    <div class="gatepass-box mt-15">
+                        <table class="grid-table">
+                            <tr>
+                                <td><strong>আইডি নং-</strong></td>
+                                <td><strong class="d-id-bn"></strong></td>
+                                <td><strong>যোগদানের তারিখঃ</strong></td>
+                                <td><strong class="d-joining-bn"></strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>নাম (বাংলা):</strong></td>
+                                <td><strong class="d-name-bn"></strong></td>
+                                <td><strong>NAME (English):</strong></td>
+                                <td><strong class="d-name-en"></strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>পিতার নামঃ</strong></td>
+                                <td><span class="d-father-bn"></span></td>
+                                <td><strong>নিজ জেলাঃ</strong></td>
+                                <td><span class="d-perm-dist"></span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>বর্তমান ঠিকানাঃ</strong></td>
+                                <td colspan="3"><span class="d-pres-full"></span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>শারীরিক গঠনঃ</strong></td>
+                                <td>উচ্চতাঃ <span class="d-height"></span></td>
+                                <td>ওজনঃ</td>
+                                <td><span class="d-weight"></span> কেজি</td>
+                            </tr>
+                            <tr>
+                                <td><strong>গ্রেডঃ</strong></td>
+                                <td><span class="d-grade"></span></td>
+                                <td><strong>পদবীঃ</strong></td>
+                                <td><span class="d-designation-bn"></span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>প্রস্তাবিত বেতনঃ</strong></td>
+                                <td><strong class="d-gross"></strong>/-</td>
+                                <td><strong>লাইন নং-</strong></td>
+                                <td><span class="d-line"></span></td>
+                            </tr>
+                        </table>
+
+                        <div class="check-docs mt-20">
+                            <strong>প্রয়োজনীয় কাগজপত্র জমার তালিকাঃ</strong>
+                            <ul>
+                                <li>১. ছবি ৫ কপি পাসপোর্ট সাইজ</li>
+                                <li>২. ভোটার আইডি কার্ড / অনলাইন জন্ম সনদ ফটোকপি</li>
+                                <li>৩. চেয়ারম্যান / কমিশনার প্রদত্ত নাগরিক সনদ</li>
+                                <li>৪. শিক্ষাগত যোগ্যতা ও অভিজ্ঞতার সনদ</li>
+                            </ul>
+                        </div>
+
+                        <div class="signature-grid-3 mt-40">
+                            <div>
+                                <div class="sig-line">প্রাথমিক বয়স যাচাইকারী (নার্স/এম.এ)</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="sig-line">যাচাইকারী (A.H.R.O)</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="sig-line">অনুমোদনকারী (পি.এম / এফ.এম)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 9: নথিপত্র ও মালামাল প্রাপ্তিস্বীকার পত্র (SIKAROKTI) -->
+            <div id="tab-9" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-sikarokti">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-title-center">
+                        <h3 class="underlined-title">নিয়োগপ্রাপ্ত কর্মীর নথিপত্র ও মালামাল প্রাপ্তি স্বীকারোক্তি</h3>
+                    </div>
+
+                    <table class="grid-table compact-table mt-15">
+                        <tr>
+                            <td><strong>নামঃ</strong> <strong class="d-name-bn"></strong></td>
+                            <td><strong>আই.ডি নং-</strong> <strong class="d-id-bn"></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>পদবীঃ</strong> <span class="d-designation-bn"></span></td>
+                            <td><strong>সেকশনঃ</strong> <span class="d-section-bn"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>যোগদানের তারিখঃ</strong> <span class="d-joining-bn"></span></td>
+                            <td><strong>কারখানাঃ</strong> <span class="printFactoryNameBn">ফেয়ার পলি লিঃ</span></td>
+                        </tr>
+                    </table>
+
+                    <p class="body-para mt-20">
+                        আমি এই মর্মে অঙ্গীকার ও স্বীকার করিতেছি যে, অদ্য চাকুরীতে যোগদানকালীন সময়ে কারখানা কর্তৃপক্ষ হইতে নিম্নবর্ণিত নথিপত্র ও মালামালসমূহ সঠিকভাবে বুঝিয়া পাইলামঃ
+                    </p>
+
+                    <table class="grid-table mt-15">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">ক্রঃ নং</th>
+                                <th style="width: 60%;">সরবরাহকৃত নথিপত্র ও মালামালের বিবরণ</th>
+                                <th style="width: 30%;">প্রাপ্তির অবস্থা</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>০১.</td><td>নিয়োগ পত্র (Official Appointment Letter)</td><td>প্রাপ্ত হইয়াছি</td></tr>
+                            <tr><td>০২.</td><td>শ্রমিক সহায়িকা (Workers Hand Book)</td><td>প্রাপ্ত হইয়াছি</td></tr>
+                            <tr><td>০৩.</td><td>পরিচয় পত্র (Employee ID Card)</td><td>প্রাপ্ত হইয়াছি</td></tr>
+                            <tr><td>০৪.</td><td>সার্ভিস বুক (Service Book)</td><td>প্রাপ্ত হইয়াছি</td></tr>
+                            <tr><td>০৫.</td><td>অ্যাপ্রোন / কাজের পোশাক এবং স্কার্ফ (Apron & Scarf)</td><td>প্রাপ্ত হইয়াছি</td></tr>
+                            <tr><td>০৬.</td><td>কারখানা বিধিমালা ও নিরাপত্তা নির্দেশিকা</td><td>প্রাপ্ত হইয়াছি</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="signature-grid-2 mt-50">
+                        <div>
+                            <div class="sig-line">বিতরণকারী কর্মকর্তার স্বাক্ষর</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="sig-line">শ্রমিকের স্বাক্ষর ও টিপসহি<br>তারিখঃ <span class="d-joining-bn"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 10: শ্রম আইন চিঠি ১ (LL-1: অনুপস্থিতি নোটিশ ১) -->
+            <div id="tab-10" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-ll1">
+                    <div class="doc-header-simple">
+                        <div>
+                            <p><strong>(চিঠি - ১)</strong> বাংলাদেশ শ্রম আইন, ২০০৬ এর ২৭ (৩ক) ধারা অনুযায়ী</p>
+                            <p>অননুমোদিত অনুপস্থিত শ্রমিকের চূড়ান্ত নিষ্পত্তি প্রক্রিয়ায় ইস্যুকৃত ১ম পত্র</p>
+                        </div>
+                        <div class="text-right">
+                            <p><strong>রেজিস্টার্ড ডাকযোগে প্রেরিত</strong></p>
+                            <p>ডাক ট্র্যাকিং নংঃ <strong class="d-notice-tr">-</strong></p>
+                            <p>তারিখঃ <span class="d-notice-date"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="address-split mt-15">
+                        <div class="addr-half">
+                            <h4>বর্তমান ঠিকানাঃ</h4>
+                            <p>নামঃ <strong class="d-name-bn"></strong></p>
+                            <p>পিতাঃ <span class="d-father-bn"></span></p>
+                            <p>গ্রামঃ <span class="d-pres-village"></span>, ডাকঘরঃ <span class="d-pres-post"></span></p>
+                            <p>থানাঃ <span class="d-pres-thana"></span>, জেলাঃ <span class="d-pres-dist"></span></p>
+                            <p>আইডিঃ <strong class="d-id-bn"></strong>, পদবীঃ <span class="d-designation-bn"></span>, সেকশনঃ <span class="d-section-bn"></span></p>
+                        </div>
+                        <div class="addr-half">
+                            <h4>স্থায়ী ঠিকানাঃ</h4>
+                            <p>নামঃ <strong class="d-name-bn"></strong></p>
+                            <p>পিতাঃ <span class="d-father-bn"></span></p>
+                            <p>গ্রামঃ <span class="d-perm-village"></span>, ডাকঘরঃ <span class="d-perm-post"></span></p>
+                            <p>থানাঃ <span class="d-perm-thana"></span>, জেলাঃ <span class="d-perm-dist"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="subject-line mt-15">
+                        <strong>বিষয়ঃ অননুমোদিত অনুপস্থিতির কারণ ব্যাখ্যা সহ অনতিবিলম্বে কাজে যোগদান প্রসঙ্গে।</strong>
+                    </div>
+
+                    <p class="body-para mt-10">
+                        জনাব/জনাবা <strong class="d-name-bn"></strong>,<br>
+                        আপনি বিগত <strong class="d-absent-date">........................</strong> তারিখ হইতে অদ্যবধি বিনা নোটিশে এবং কর্তৃপক্ষের বিনা অনুমতিতে কারখানায় অনুপস্থিত রহিয়াছেন। আপনার এহেন অনুপস্থিতির কারণে কারখানার উৎপাদন মারাত্মকভাবে ব্যাহত হইতেছে।<br><br>
+                        অতএব, বাংলাদেশ শ্রম আইন ২০০৬ এর ধারা ২৭ (৩ক) অনুযায়ী এই পত্র প্রাপ্তির <strong>১০ (দশ) দিনের মধ্যে</strong> কারখানায় উপস্থিত হইয়া অনুপস্থিতির সন্তোষজনক কারণ ব্যাখ্যা সহ কাজে যোগদানের নির্দেশ প্রদান করা হইল। উক্ত সময়ের মধ্যে ব্যর্থ হইলে আপনার বিরুদ্ধে আইনানুগ ব্যবস্থা গ্রহণ করা হইবে।
+                    </p>
+
+                    <div class="mt-40 text-right">
+                        <div class="sig-line">কর্তৃপক্ষের নির্দেশক্রমে<br><span class="printHrHead">ব্যবস্থাপক (প্রশাসন, মানবসম্পদ ও কমপ্লায়েন্স)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 11: শ্রম আইন চিঠি ২ (LL-2: কারণ দর্শানো নোটিশ) -->
+            <div id="tab-11" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-ll2">
+                    <div class="doc-header-simple">
+                        <div>
+                            <p><strong>(চিঠি - ২)</strong> বাংলাদেশ শ্রম আইন, ২০০৬ এর ২৭ (৩ক) ধারা অনুযায়ী ২য় পত্র</p>
+                            <p>দ্বিতীয় কারণ দর্শানোর নোটিশ (Show Cause Notice)</p>
+                        </div>
+                        <div class="text-right">
+                            <p><strong>রেজিস্টার্ড ডাকযোগে প্রেরিত</strong></p>
+                            <p>ডাক ট্র্যাকিং নংঃ <strong class="d-notice-tr">-</strong></p>
+                            <p>তারিখঃ <span class="d-notice-date"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="address-split mt-15">
+                        <div class="addr-half">
+                            <h4>বর্তমান ঠিকানাঃ</h4>
+                            <p>নামঃ <strong class="d-name-bn"></strong> (আইডিঃ <strong class="d-id-bn"></strong>)</p>
+                            <p>পিতাঃ <span class="d-father-bn"></span></p>
+                            <p>গ্রামঃ <span class="d-pres-village"></span>, ডাকঘরঃ <span class="d-pres-post"></span>, জেলাঃ <span class="d-pres-dist"></span></p>
+                        </div>
+                        <div class="addr-half">
+                            <h4>স্থায়ী ঠিকানাঃ</h4>
+                            <p>গ্রামঃ <span class="d-perm-village"></span>, ডাকঘরঃ <span class="d-perm-post"></span>, জেলাঃ <span class="d-perm-dist"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="subject-line mt-15">
+                        <strong>বিষয়ঃ ২য় কারণ দর্শানোর নোটিশ ও আত্মপক্ষ সমর্থনের সুযোগ প্রসঙ্গে।</strong>
+                    </div>
+
+                    <p class="body-para mt-10">
+                        জনাব/জনাবা <strong class="d-name-bn"></strong>,<br>
+                        আপনার অননুমোদিত অনুপস্থিতির প্রেক্ষিতে পূর্বে প্রেরিত ১ম পত্রের নির্ধারিত ১০ দিন অতিক্রান্ত হওয়া সত্ত্বেও আপনি অদ্যাবধি কাজে যোগদান করেন নাই কিংবা কোনো লিখিত ব্যাখ্যা দাখিল করেন নাই।<br><br>
+                        তথাপি ন্যায়বিচারের স্বার্থে ও আপনার আত্মপক্ষ সমর্থনের শেষ সুযোগ হিসেবে আপনাকে অদ্য হইতে আরও <strong>০৭ (সাত) দিনের সময়</strong> প্রদান করা হইল। এই সময়ের মধ্যে সন্তোষজনক ব্যাখ্যাসহ কাজে যোগদান না করিলে বাংলাদেশ শ্রম আইন ২০০৬ এর ধারা ২৭ (৩ক) অনুযায়ী আপনি স্বেচ্ছায় চাকুরী হইতে অব্যাহতি গ্রহণ করিয়াছেন বলিয়া গণ্য হইবে।
+                    </p>
+
+                    <div class="mt-40 text-right">
+                        <div class="sig-line">কর্তৃপক্ষের নির্দেশক্রমে<br><span class="printHrHead">ব্যবস্থাপক (প্রশাসন, মানবসম্পদ ও কমপ্লায়েন্স)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 12: শ্রম আইন চিঠি ৩ (LL-3: চূড়ান্ত নোটিশ) -->
+            <div id="tab-12" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-ll3">
+                    <div class="doc-header-simple">
+                        <div>
+                            <p><strong>(চিঠি - ৩)</strong> বাংলাদেশ শ্রম আইন, ২০০৬ এর ২৭ (৩ক) ধারা অনুযায়ী চূড়ান্ত পত্র</p>
+                            <p>চাকুরী সমাপ্তি ও চূড়ান্ত নিষ্পত্তি সংক্রান্ত বিজ্ঞপ্তি</p>
+                        </div>
+                        <div class="text-right">
+                            <p><strong>রেজিস্টার্ড ডাকযোগে প্রেরিত</strong></p>
+                            <p>ডাক ট্র্যাকিং নংঃ <strong class="d-notice-tr">-</strong></p>
+                            <p>তারিখঃ <span class="d-notice-date"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="address-split mt-15">
+                        <div class="addr-half">
+                            <h4>বর্তমান ঠিকানাঃ</h4>
+                            <p>নামঃ <strong class="d-name-bn"></strong> (আইডিঃ <strong class="d-id-bn"></strong>)</p>
+                            <p>পিতাঃ <span class="d-father-bn"></span></p>
+                            <p>গ্রামঃ <span class="d-pres-village"></span>, ডাকঘরঃ <span class="d-pres-post"></span>, জেলাঃ <span class="d-pres-dist"></span></p>
+                        </div>
+                        <div class="addr-half">
+                            <h4>স্থায়ী ঠিকানাঃ</h4>
+                            <p>গ্রামঃ <span class="d-perm-village"></span>, ডাকঘরঃ <span class="d-perm-post"></span>, জেলাঃ <span class="d-perm-dist"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="subject-line mt-15">
+                        <strong>বিষয়ঃ চাকুরী হইতে চূড়ান্ত নিষ্পত্তি ও অব্যাহতি প্রসঙ্গে।</strong>
+                    </div>
+
+                    <p class="body-para mt-10">
+                        জনাব/জনাবা <strong class="d-name-bn"></strong>,<br>
+                        যেহেতু আপনাকে অনুপস্থিতির কারণ ব্যাখ্যা ও কাজে যোগদানের জন্য পর পর দুটি নোটিশ প্রদানের মাধ্যমে পর্যাপ্ত সময় ও সুযোগ দেওয়া সত্ত্বেও আপনি নির্ধারিত সময়ে কাজে যোগদান করেন নাই বা কোনো জবাব প্রদান করেন নাই;<br><br>
+                        সেহেতু বাংলাদেশ শ্রম আইন ২০০৬ এর ধারা ২৭ (৩ক) অনুযায়ী আপনার অনুপস্থিতির প্রথম দিন (<span class="d-absent-date"></span>) হইতে আপনি <strong>স্বেচ্ছায় চাকুরী হইতে ইস্তফা দিয়েছেন</strong> বলিয়া চূড়ান্তভাবে গণ্য করা হইল এবং আপনার চাকুরী সমাপ্ত ঘোষণা করা হইল। আপনার কোনো আইনানুগ পাওনা থাকিলে কারখানার হিসাব শাখা হইতে উপযুক্ত প্রমাণ দাখিল সাপেক্ষে গ্রহণ করিতে পারিবেন।
+                    </p>
+
+                    <div class="mt-40 text-right">
+                        <div class="sig-line">কর্তৃপক্ষের নির্দেশক্রমে<br><span class="printHrHead">ব্যবস্থাপক (প্রশাসন, মানবসম্পদ ও কমপ্লায়েন্স)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 13: চূড়ান্ত হিসাব ও সেটেলমেন্ট (FINAL SETTLEMENT DEDICATED SHEET) -->
+            <div id="tab-13" class="tab-pane printable-page">
+                <div class="doc-page a4-page" id="doc-settlement">
+                    <div class="company-doc-header">
+                        <img class="doc-logo-img printLogoImg" src="/static/img/default_logo.png" alt="Logo">
+                        <div class="doc-company-info">
+                            <h2 class="printFactoryNameBn">ফেয়ার পলি লিঃ</h2>
+                            <h4 class="printFactoryNameEn">FAIR POLY LTD.</h4>
+                            <p class="printFactoryAddress">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-title-center">
+                        <h3 class="underlined-title">FINAL SETTLEMENT / চূড়ান্ত হিসাব বিবরণী</h3>
+                        <p style="font-size:11.5px; margin-top:2px;">[বাংলাদেশ শ্রম আইন ২০০৬ (সংশোধিত) এর ধারা ২৭(৪), ১৯, ২০, ২৬ ও ১১৭ মোতাবেক]</p>
+                    </div>
+
+                    <table class="grid-table compact-table mt-10">
+                        <tr>
+                            <td><strong>NAME OF EMPLOYEE:</strong> <strong class="d-name-bn"></strong> (<span class="d-name-en"></span>)</td>
+                            <td><strong>CODE / ID:</strong> <strong class="d-id-bn"></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>DESIGNATION:</strong> <span class="d-designation-bn"></span></td>
+                            <td><strong>SECTION:</strong> <span class="d-section-bn"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>DATE OF JOINING:</strong> <span class="d-joining-bn"></span></td>
+                            <td><strong>DATE OF SEPARATION:</strong> <strong class="d-sep-date"></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL SERVICE PERIOD:</strong> <strong class="d-service-period"></strong></td>
+                            <td><strong>REASON OF SEPARATION:</strong> <strong class="d-sep-reason">স্বেচ্ছায় ইস্তফা</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>GROSS SALARY:</strong> <strong class="d-gross"></strong> ৳</td>
+                            <td><strong>BASIC SALARY:</strong> <strong class="d-basic"></strong> ৳</td>
+                        </tr>
+                    </table>
+
+                    <h4 class="subheading mt-15">A) DUES / প্রদেয় সুবিধাদি (শ্রম আইন অনুযায়ী হিসাব):</h4>
+                    <table class="grid-table compact-table">
+                        <tr>
+                            <td>১. বকেয়া মজুরি / বেতন (<span class="d-last-days">15</span> কার্যদিবস)</td>
+                            <td class="text-right"><strong><span class="d-wages-due">0</span> ৳</strong></td>
+                        </tr>
+                        <tr>
+                            <td>২. অর্জিত ছুটির সমপরিমাণ ক্ষতিপূরণ (<span class="d-el-days">18</span> দিন @ মোট মজুরি)</td>
+                            <td class="text-right"><strong><span class="d-el-amount">0</span> ৳</strong></td>
+                        </tr>
+                        <tr>
+                            <td>৩. সার্ভিস বেনিফিট / গ্র্যাচুইটি (ধারা ২৭(৪) অনুযায়ী)</td>
+                            <td class="text-right"><strong><span class="d-comp-amount">0</span> ৳</strong></td>
+                        </tr>
+                        <tr>
+                            <td>৪. নোটিশ ক্ষতিপূরণ পে (<span class="d-notice-pay-days">0</span> দিন)</td>
+                            <td class="text-right"><strong><span class="d-notice-pay-amount">0</span> ৳</strong></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>মোট প্রদেয় টাকা (TOTAL DUES)</strong></td>
+                            <td class="text-right"><strong class="d-total-dues">0 ৳</strong></td>
+                        </tr>
+                    </table>
+
+                    <h4 class="subheading mt-15">B) DEDUCTION / কর্তনঃ</h4>
+                    <table class="grid-table compact-table">
+                        <tr><td>১. অগ্রিম ঋণ / লোন / অন্যান্য কর্তন</td><td class="text-right"><span class="d-deduction">০</span> ৳</td></tr>
+                        <tr class="highlight-row"><td><strong>মোট কর্তন (TOTAL DEDUCTION)</strong></td><td class="text-right"><strong class="d-deduction">০</strong> ৳</td></tr>
+                    </table>
+
+                    <div class="net-payable-box mt-15">
+                        <div class="flex-between">
+                            <span style="font-size:16px;">সর্বমোট প্রদেয় নিট টাকা (NET PAYABLE AMOUNT):</span>
+                            <strong class="net-amount text-primary-large" id="dNetPayable" style="font-size:22px; color:#15803d;">0 ৳</strong>
+                        </div>
+                    </div>
+
+                    <div class="declaration-box mt-20">
+                        <strong>শ্রমিকের অঙ্গীকারনামা (Declaration):</strong><br>
+                        আমি এই মর্মে স্বীকার করিতেছি যে, কারখানা কর্তৃপক্ষ হইতে আমার চাকুরির চূড়ান্ত হিসাব বাবদ সর্বমোট টাকা বুঝিয়া পাইলাম। কারখানা কর্তৃপক্ষের নিকট আমার আর কোনো প্রকার দাবি বা পাওনা রহিল না।
+                    </div>
+
+                    <div class="signature-grid-3 mt-40">
+                        <div>
+                            <div class="sig-line">হিসাব শাখা (PREPARED BY)</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="sig-line">মানবসম্পদ ও প্রশাসন প্রধান</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="sig-line">শ্রমিকের স্বাক্ষর ও টিপসহি</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div id="tab-14" class="tab-pane no-print-if-hidden">
+            <div class="card-box">
+                <div class="card-header flex-between" style="flex-wrap:wrap; gap:12px;">
+                    <div>
+                        <h2>📊 মাসিক স্যালারি ও অ্যাটেন্ডেন্স শিট (Monthly Attendance & Salary Sheet)</h2>
+                        <p class="text-muted">ZKTeco ফিঙ্গারপ্রিন্ট মেশিনের CSV ফাইল আপলোড করে স্বয়ংক্রিয়ভাবে স্যালারি, ওভারটাইম ও কর্তন হিসাব করুন (বাংলাদেশ শ্রমআইন ২০০৬ ও ২০২৩ গেজেট অনুযায়ী)।</p>
+                    </div>
+                    <div class="header-actions" style="display:flex; gap:10px; align-items:center;">
+                        <button class="btn btn-primary" onclick="window.print()">🖨️ স্যালারি শিট প্রিন্ট করুন</button>
+                        <button class="btn btn-secondary" onclick="exportPayrollToExcel()">📥 এক্সেল ডাউনলোড</button>
+                    </div>
+                </div>
+
+                <!-- UPLOAD & CONFIGURATION CARD -->
+                <div class="payroll-config-card" style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:18px; margin-bottom:20px;">
+                    <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end;">
+                        <div style="width:220px;">
+                            <label style="font-weight:600; display:block; margin-bottom:6px; color:#1e293b;">📅 বেতনের মাস (Select Month):</label>
+                            <select id="payrollMonthSelect" onchange="onMonthSelectChanged()" style="padding:9px; background:white; border:1px solid #cbd5e1; border-radius:6px; width:100%; font-weight:600; color:#0f172a;">
+                                <option value="September 2026" selected>September 2026 (সেপ্টেম্বর ২০২৬)</option>
+                                <option value="July 2026">July 2026 (জুলাই ২০২৬)</option>
+                            </select>
+                            <input type="hidden" id="payrollMonthInput" value="September 2026">
+                        </div>
+                        <div style="width:110px;">
+                            <label style="font-weight:600; display:block; margin-bottom:6px; color:#1e293b;">মাসের দিন (Days):</label>
+                            <input type="number" id="payrollDaysInput" value="30" min="28" max="31" style="padding:9px; background:white; border:1px solid #cbd5e1; border-radius:6px; width:100%;">
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary" style="padding:10px 20px; font-weight:bold; font-size:13.5px; background:#1d4ed8; color:white; border-radius:6px; cursor:pointer;" onclick="loadCurrentMonthSalaries()">👥 সকল কর্মীর স্যালারি দেখুন</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-success" style="padding:10px 18px; font-weight:bold; font-size:13.5px; background:#16a34a; color:white; border-radius:6px; cursor:pointer;" onclick="syncPayrollFromAttendance()">🔄 বায়োমেট্রিক হাজিরা থেকে স্যালারি সিঙ্ক</button>
+                        </div>
+                        <div style="flex:1; min-width:260px;">
+                            <label style="font-weight:600; display:block; margin-bottom:6px; color:#1e293b;">📁 ZKTeco নতুন অ্যাটেন্ডেন্স ফাইল (CSV / Excel):</label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="file" id="attendanceFileInput" accept=".csv, .xlsx, .xls" style="padding:7px; background:white; border:1px solid #cbd5e1; border-radius:6px; flex:1;">
+                                <button type="button" class="btn btn-success" style="padding:8px 16px; font-weight:bold; font-size:13px; white-space:nowrap; cursor:pointer;" onclick="uploadAttendanceFile()">⚡ নতুন হিসাব</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="uploadStatusMsg" style="margin-top:10px; font-weight:500; font-size:13px; color:#1e40af;"></div>
+                </div>
+
+                <!-- SUMMARY COUNTERS -->
+                <div class="payroll-summary-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap:12px; margin-bottom:20px;">
+                    <div style="background:#eff6ff; padding:14px; border-radius:8px; border-left:4px solid #3b82f6;">
+                        <div style="font-size:12px; color:#475569;">মোট কর্মচারী / শ্রমিক</div>
+                        <div id="statTotalWorkers" style="font-size:22px; font-weight:bold; color:#1e3a8a;">০ জন</div>
+                    </div>
+                    <div style="background:#f1f5f9; padding:14px; border-radius:8px; border-left:4px solid #64748b;">
+                        <div style="font-size:12px; color:#475569;">মোট গ্রস স্যালারি</div>
+                        <div id="statTotalGross" style="font-size:19px; font-weight:bold; color:#0f172a;">৳ ০</div>
+                    </div>
+                    <div style="background:#fee2e2; padding:14px; border-radius:8px; border-left:4px solid #ef4444;">
+                        <div style="font-size:12px; color:#475569;">মোট অনুপস্থিতি কর্তন</div>
+                        <div id="statTotalDeduction" style="font-size:19px; font-weight:bold; color:#991b1b;">৳ ০</div>
+                    </div>
+                    <div style="background:#ecfdf5; padding:14px; border-radius:8px; border-left:4px solid #10b981;">
+                        <div style="font-size:12px; color:#475569;">মোট মূল প্রদেয় বেতন</div>
+                        <div id="statTotalNet" style="font-size:19px; font-weight:bold; color:#065f46;">৳ ০</div>
+                    </div>
+                    <div style="background:#fef3c7; padding:14px; border-radius:8px; border-left:4px solid #f59e0b;">
+                        <div style="font-size:12px; color:#475569;">মোট ওভারটাইম টাকা</div>
+                        <div id="statTotalOT" style="font-size:19px; font-weight:bold; color:#92400e;">৳ ০</div>
+                    </div>
+                    <div style="background:#f0fdf4; padding:14px; border-radius:8px; border-left:4px solid #16a34a; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                        <div style="font-size:12px; color:#166534; font-weight:600;">সর্বমোট প্রদেয় টাকা (ওটিসহ)</div>
+                        <div id="statGrandTotal" style="font-size:22px; font-weight:bold; color:#14532d;">৳ ০</div>
+                    </div>
+                </div>
+
+                <!-- LIVE FILTER & SEARCH BAR -->
+                <div class="payroll-filter-bar no-print" style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px 16px; margin-bottom:15px;">
+                    <div style="flex:1; min-width:260px; position:relative;">
+                        <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:15px;">🔍</span>
+                        <input type="text" id="payrollFilterSearch" placeholder="নির্দিষ্ট শ্রমিকের কার্ড নং, নাম, পদবী বা সেকশন দিয়ে খুঁজুন..." oninput="filterPayrollTable()" style="width:100%; padding:8px 12px 8px 36px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; outline:none;">
+                    </div>
+                    <div style="width:180px;">
+                        <select id="payrollFilterSection" onchange="filterPayrollTable()" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; background:white;">
+                            <option value="">সকল সেকশন (All)</option>
+                        </select>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn btn-secondary" onclick="resetPayrollFilter()" style="padding:8px 14px; font-size:13px; cursor:pointer;">🔄 রিসেট / সকল কর্মী</button>
+                    </div>
+                </div>
+
+                <!-- SALARY SHEET DOCUMENT FOR PRINTING & DISPLAY -->
+                <div class="salary-sheet-paper" id="salarySheetPrintArea">
+                    <div class="salary-print-header" style="text-align:center; margin-bottom:15px;">
+                        <h2 class="printFactoryNameEn" style="font-size:20px; margin:0; text-transform:uppercase;">FAIR POLY LTD.</h2>
+                        <h3 class="printFactoryNameBn" style="font-size:16px; margin:2px 0 0 0;">ফেয়ার পলি লিঃ</h3>
+                        <p style="font-size:12px; margin:2px 0; color:#555;">পোস্ট: মুরাদপুর, থানা: বন্দর, জেলা: নারায়ণগঞ্জ।</p>
+                        <h4 style="margin:6px 0 0 0; font-size:15px; font-weight:bold; text-decoration:underline;">
+                            MONTHLY SALARY / WAGES SHEET FOR THE MONTH OF <span id="salarySheetMonthTitle">SEPTEMBER-2026</span>
+                        </h4>
+                    </div>
+
+                    <div style="overflow-x:auto;">
+                        <table class="salary-data-table" id="salaryDataTable" style="width:100%; border-collapse:collapse; font-size:11px; text-align:center;">
+                            <thead>
+                                <tr style="background:#f1f5f9; font-weight:bold;">
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 3px;">SL</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 4px;">Card No</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 8px; text-align:left;">Name of Employee</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 6px;">Designation</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 5px;">Section</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 3px;">Grd</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 4px;">Basic</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 4px;">H/Rent</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 3px;">Med</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 3px;">Food</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 3px;">Conv</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 5px;">Gross</th>
+                                    <th colspan="5" style="border:1px solid #94a3b8; padding:3px 2px;">Attendance Days</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 4px;">Abs. Ded</th>
+                                    <th colspan="3" style="border:1px solid #94a3b8; padding:3px 2px;">Over Time</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 6px; font-weight:bold;">Net Salary</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 6px; font-weight:bold; background:#dcfce7; color:#14532d;">Total Payable</th>
+                                    <th rowspan="2" class="no-print" style="border:1px solid #94a3b8; padding:5px 4px;">Action</th>
+                                    <th rowspan="2" style="border:1px solid #94a3b8; padding:5px 12px;">Signature / Thumb</th>
+                                </tr>
+                                <tr style="background:#f8fafc; font-weight:600; font-size:10px;">
+                                    <th style="border:1px solid #94a3b8; padding:3px 3px;">P</th>
+                                    <th style="border:1px solid #94a3b8; padding:3px 3px;">A</th>
+                                    <th style="border:1px solid #94a3b8; padding:3px 3px;">L</th>
+                                    <th style="border:1px solid #94a3b8; padding:3px 3px;">H</th>
+                                    <th style="border:1px solid #94a3b8; padding:3px 3px;">Pay</th>
+                                    <th style="border:1px solid #94a3b8; padding:3px 3px;">Hrs</th>
+                                    <th style="border:1px solid #94a3b8; padding:3px 3px;">Rate</th>
+                                    <th style="border:1px solid #94a3b8; padding:3px 3px;">OT Tk</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salaryTableBody">
+                                <tr>
+                                    <td colspan="23" style="padding:25px; color:#64748b; font-size:13px; border:1px solid #cbd5e1;">
+                                        কোনো স্যালারি শিট ডাটা লোড করা নেই। <b>"সকল কর্মীর স্যালারি দেখুন"</b> বাটনে চাপ দিন।
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot id="salaryTableFoot" style="display:none; font-weight:bold; background:#e2e8f0;">
+                                <!-- Will be rendered via JS -->
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- SIGNATURE BLOCK FOR SALARY SHEET -->
+                    <div class="salary-sheet-signatures" style="margin-top:40px; display:flex; justify-content:space-between; text-align:center; font-size:12px;">
+                        <div>
+                            <div style="border-top:1px solid #000; width:130px; margin-bottom:4px;"></div>
+                            <span>Prepared By</span>
+                        </div>
+                        <div>
+                            <div style="border-top:1px solid #000; width:130px; margin-bottom:4px;"></div>
+                            <span>Checked By (HR)</span>
+                        </div>
+                        <div>
+                            <div style="border-top:1px solid #000; width:130px; margin-bottom:4px;"></div>
+                            <span>Accounts Manager</span>
+                        </div>
+                        <div>
+                            <div style="border-top:1px solid #000; width:130px; margin-bottom:4px;"></div>
+                            <span>Managing Director</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 15: DAILY & MONTHLY ATTENDANCE -->
+        <div id="tab-15" class="tab-pane no-print-if-hidden">
+            <div class="card-box">
+                <!-- VIEW SUB-NAV SWITCHER -->
+                <div class="no-print" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; border-bottom:2px solid #e2e8f0; padding-bottom:12px;">
+                    <button type="button" class="btn" id="btnAttSubDaily" onclick="switchAttSubTab('daily')" style="background:#16a34a; color:white; font-weight:bold; padding:9px 22px; border-radius:6px; border:none; cursor:pointer; font-size:13.5px;">
+                        📅 দৈনিক হাজিরা ও লাইভ পাঞ্চ (Daily Attendance)
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="btnAttSubMonthly" onclick="switchAttSubTab('monthly')" style="background:#f1f5f9; color:#1e293b; font-weight:bold; padding:9px 22px; border-radius:6px; border:1px solid #cbd5e1; cursor:pointer; font-size:13.5px;">
+                        🗓️ পুরো মাসের হাজিরা শিট (Monthly Attendance Sheet)
+                    </button>
+                </div>
+
+                <!-- SUB VIEW 1: DAILY ATTENDANCE -->
+                <div id="attSubDailyView">
+<div class="card-header flex-between" style="flex-wrap:wrap; gap:12px;">
+                    <div>
+                        <h2>📅 দৈনিক হাজিরা ও লাইভ পাঞ্চ মনিটরিং (Daily Attendance Report)</h2>
+                        <p class="text-muted">ZKTime.Net ডাটাবেজ ও ZKTeco পাঞ্চ মেশিন (IP: <strong>192.168.0.199</strong>) থেকে রিয়েল-টাইম ফিঙ্গারপ্রিন্ট ইন/আউট মনিটরিং।</p>
+                    </div>
+                    <div class="header-actions" style="display:flex; gap:10px; align-items:center;">
+                        <button class="btn btn-primary" onclick="window.print()">🖨️ দৈনিক হাজিরা প্রিন্ট করুন</button>
+                        <button class="btn btn-secondary" onclick="exportDailyAttendanceToExcel()">📥 এক্সেল ডাউনলোড</button>
+                    </div>
+                </div>
+
+                <!-- DEVICE CONNECTION & DATE SELECTOR CARD -->
+                <div class="payroll-config-card" style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:18px; margin-bottom:20px;">
+                    <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end;">
+                        <div style="width:200px;">
+                            <label style="font-weight:600; display:block; margin-bottom:6px; color:#1e293b;">📅 হাজিরার তারিখ (Select Date):</label>
+                            <input type="date" id="dailyAttDateInput" onchange="loadDailyAttendance()" style="padding:9px; background:white; border:1px solid #cbd5e1; border-radius:6px; width:100%; font-weight:600; color:#0f172a;">
+                        </div>
+                        <div style="width:220px;">
+                            <label style="font-weight:600; display:block; margin-bottom:6px; color:#1e293b;">পাসকৃত তারিখসমূহ (Available Dates):</label>
+                            <select id="dailyAttQuickDateSelect" onchange="onQuickDateSelectChanged()" style="padding:9px; background:white; border:1px solid #cbd5e1; border-radius:6px; width:100%; font-weight:500;">
+                                <option value="">তারিখ নির্বাচন করুন...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary" style="padding:10px 18px; font-weight:bold; font-size:13px; background:#16a34a; color:white; border-radius:6px; cursor:pointer;" onclick="syncZKLivePunches()">⚡ মেশিন থেকে লাইভ পাঞ্চ সিঙ্ক করুন</button>
+                        <button type="button" class="btn btn-secondary" style="padding:10px 16px; font-weight:600; font-size:13px; cursor:pointer;" onclick="loadDailyAttendance()">🔄 রিফ্রেশ ডাটা</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-secondary" style="padding:10px 18px; font-weight:bold; font-size:13px; cursor:pointer;" onclick="checkZKDevice()">📡 মেশিন পিং টেস্ট (192.168.0.199)</button>
+                        </div>
+                    </div>
+
+                    <!-- LIVE DEVICE STATUS BADGE & SYNC INFO -->
+                    <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+                        <div id="deviceStatusPill" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border-radius:20px; background:#e0f2fe; color:#0369a1; font-size:13px; font-weight:600;">
+                            <span>🌐</span>
+                            <span>মেশিন আইপি: 192.168.0.199:4370 (F19/ID)</span>
+                        </div>
+                        <div id="zkDbStatusPill" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border-radius:20px; background:#ecfdf5; color:#047857; font-size:13px; font-weight:600;">
+                            <span>💾</span>
+                            <span>ZKTime.Net ডাটাবেজ: ১২৭,১১৫টি পাঞ্চ রেকর্ড সংরক্ষিত ✅</span>
+                        </div>
+                        <div id="latestPunchBadge" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; background:#fef3c7; color:#92400e; font-size:12px; font-weight:600;">
+                            <span>🕒</span>
+                            <span>সর্বশেষ প্রাপ্ত পাঞ্চ: 2026-10-06 12:59 PM</span>
+                        </div>
+                    </div>
+                    
+                    <div id="zkSyncNotice" style="margin-top:12px; padding:10px 14px; background:#fffbeb; border:1px solid #fde68a; border-radius:6px; font-size:12.5px; color:#92400e; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                        <div>
+                            <strong>💡 আজকের লাইভ পাঞ্চ দেখার উপায়:</strong> আপনার ডেস্কটপে চালু থাকা <code>ZKTime.Net</code> সফটওয়্যারে গিয়ে <strong>Device &gt; Download Attendance</strong> (পাঞ্চ ডাউনলোড) করুন। ডাউনলোড হওয়ামাত্রই এই পাতায় সাথে সাথে আজকের সকল ফিঙ্গারপ্রিন্ট ডাটা চলে আসবে।
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="loadDailyAttendance()" style="background:#b45309; border:none; color:white; font-size:12px;">🔄 রিফ্রেশ করুন</button>
+                    </div>
+                </div>
+
+                <!-- DAILY SUMMARY COUNTERS -->
+                <div class="payroll-summary-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:18px;">
+                    <div style="background:#eff6ff; padding:12px; border-radius:8px; border-left:4px solid #3b82f6;">
+                        <div style="font-size:11px; color:#475569;">মোট কর্মচারী / শ্রমিক</div>
+                        <div id="dailyStatTotalWorkers" style="font-size:19px; font-weight:bold; color:#1e3a8a;">০ জন</div>
+                    </div>
+                    <div style="background:#ecfdf5; padding:12px; border-radius:8px; border-left:4px solid #10b981;">
+                        <div style="font-size:11px; color:#475569;">আজ উপস্থিত (Total)</div>
+                        <div id="dailyStatPresent" style="font-size:19px; font-weight:bold; color:#065f46;">০ জন</div>
+                    </div>
+                    <div style="background:#fefce8; padding:12px; border-radius:8px; border-left:4px solid #eab308;">
+                        <div style="font-size:11px; color:#854d0e;">☀️ ডে শিফট (৮টা-৫টা)</div>
+                        <div id="dailyStatDayShift" style="font-size:19px; font-weight:bold; color:#a16207;">০ জন</div>
+                    </div>
+                    <div style="background:#f5f3ff; padding:12px; border-radius:8px; border-left:4px solid #8b5cf6;">
+                        <div style="font-size:11px; color:#5b21b6;">🌙 নাইট শিফট (৮টা-৫টা)</div>
+                        <div id="dailyStatNightShift" style="font-size:19px; font-weight:bold; color:#6d28d9;">০ জন</div>
+                    </div>
+                    <div style="background:#fff7ed; padding:12px; border-radius:8px; border-left:4px solid #ea580c;">
+                        <div style="font-size:11px; color:#9a3412;">⚡ মোট ওভারটাইম (OT)</div>
+                        <div id="dailyStatOT" style="font-size:19px; font-weight:bold; color:#c2410c;">০ ঘণ্টা</div>
+                    </div>
+                    <div style="background:#fef3c7; padding:12px; border-radius:8px; border-left:4px solid #f59e0b;">
+                        <div style="font-size:11px; color:#92400e;">⏰ বিলম্ব (Late In)</div>
+                        <div id="dailyStatLate" style="font-size:19px; font-weight:bold; color:#92400e;">০ জন</div>
+                    </div>
+                    <div style="background:#fee2e2; padding:12px; border-radius:8px; border-left:4px solid #ef4444;">
+                        <div style="font-size:11px; color:#475569;">❌ অনুপস্থিত (Absent)</div>
+                        <div id="dailyStatAbsent" style="font-size:19px; font-weight:bold; color:#991b1b;">০ জন</div>
+                    </div>
+                    <div style="background:#f8fafc; padding:12px; border-radius:8px; border-left:4px solid #64748b;">
+                        <div style="font-size:11px; color:#475569;">মোট পাঞ্চ রেকর্ড</div>
+                        <div id="dailyStatPunches" style="font-size:19px; font-weight:bold; color:#1e293b;">০ টি</div>
+                    </div>
+                </div>
+                    <div style="background:#ecfdf5; padding:14px; border-radius:8px; border-left:4px solid #10b981;">
+                        <div style="font-size:12px; color:#475569;">আজ উপস্থিত (Present)</div>
+                        <div id="dailyStatPresent" style="font-size:22px; font-weight:bold; color:#065f46;">০ জন</div>
+                    </div>
+                    <div style="background:#fef3c7; padding:14px; border-radius:8px; border-left:4px solid #f59e0b;">
+                        <div style="font-size:12px; color:#475569;">বিলম্বে আগমন (Late In)</div>
+                        <div id="dailyStatLate" style="font-size:22px; font-weight:bold; color:#92400e;">০ জন</div>
+                    </div>
+                    <div style="background:#fee2e2; padding:14px; border-radius:8px; border-left:4px solid #ef4444;">
+                        <div style="font-size:12px; color:#475569;">অনুপস্থিত (Absent)</div>
+                        <div id="dailyStatAbsent" style="font-size:22px; font-weight:bold; color:#991b1b;">০ জন</div>
+                    </div>
+                    <div style="background:#f8fafc; padding:14px; border-radius:8px; border-left:4px solid #64748b;">
+                        <div style="font-size:12px; color:#475569;">মোট ফিঙ্গারপ্রিন্ট পাঞ্চ</div>
+                        <div id="dailyStatPunches" style="font-size:22px; font-weight:bold; color:#1e293b;">০ টি</div>
+                    </div>
+                </div>
+
+                <!-- LIVE FILTER & SEARCH BAR -->
+                <div class="payroll-filter-bar no-print" style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px 16px; margin-bottom:15px;">
+                    <div style="flex:1; min-width:240px; position:relative;">
+                        <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:15px;">🔍</span>
+                        <input type="text" id="dailyAttSearch" placeholder="কার্ড নং, নাম, পদবী বা সেকশন দিয়ে খুঁজুন..." oninput="filterDailyAttendanceTable()" style="width:100%; padding:8px 12px 8px 36px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; outline:none;">
+                    </div>
+                    <div style="width:160px;">
+                        <select id="dailyAttStatusFilter" onchange="filterDailyAttendanceTable()" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; background:white;">
+                            <option value="">সকল স্ট্যাটাস (All)</option>
+                            <option value="Present">উপস্থিত (Present)</option>
+                            <option value="Late">বিলম্ব (Late)</option>
+                            <option value="Absent">অনুপস্থিত (Absent)</option>
+                        </select>
+                    </div>
+                    <div style="width:170px;">
+                        <select id="dailyAttSectionFilter" onchange="filterDailyAttendanceTable()" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; background:white;">
+                            <option value="">সকল সেকশন (All)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" onclick="resetDailyAttFilter()" style="padding:8px 14px; font-size:13px; cursor:pointer;">🔄 রিসেট</button>
+                    </div>
+                </div>
+
+                <!-- DAILY ATTENDANCE PRINT AREA -->
+                <div class="salary-sheet-paper" id="dailyAttPrintArea">
+                    <div class="salary-print-header" style="text-align:center; margin-bottom:15px;">
+                        <h2 class="printFactoryNameEn" style="font-size:20px; margin:0; text-transform:uppercase;">FAIR POLY LTD.</h2>
+                        <h3 class="printFactoryNameBn" style="font-size:16px; margin:2px 0 0 0;">ফেয়ার পলি লিঃ</h3>
+                        <p style="font-size:12px; margin:2px 0; color:#555;">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                        <h4 style="margin:6px 0 0 0; font-size:15px; font-weight:bold; text-decoration:underline;">
+                            DAILY BIOMETRIC ATTENDANCE & PUNCH REPORT - <span id="dailyAttDateTitle">TODAY</span>
+                        </h4>
+                    </div>
+
+                    <div style="overflow-x:auto;">
+                        <table class="salary-data-table" id="dailyAttTable" style="width:100%; border-collapse:collapse; font-size:12px; text-align:center;">
+                            <thead>
+                                <tr style="background:#f1f5f9; font-weight:bold;">
+                                    <th style="border:1px solid #94a3b8; padding:7px 4px; width:35px;">SL</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 5px; width:65px;">Card No</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 8px; text-align:left;">Name of Employee</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px;">Designation</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px;">Section</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px; width:130px;">শিফট (Shift)</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px; width:75px; color:#047857;">In-Time (ইন)</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px; width:75px; color:#1d4ed8;">Out-Time (আউট)</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px; width:100px;">কাজের সময়</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px; width:75px; color:#b45309;">ওভারটাইম</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 4px; width:45px;">পাঞ্চ</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px; width:110px;">হাজিরা স্ট্যাটাস</th>
+                                    <th style="border:1px solid #94a3b8; padding:7px 6px; width:105px;" class="no-print">মাসিক বিস্তারিত</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dailyAttTableBody">
+                                <tr>
+                                    <td colspan="11" style="padding:25px; color:#64748b; font-size:13px; text-align:center;">
+                                        ডাটা লোড করা হচ্ছে... অনুগ্রহ করে অপেক্ষা করুন।
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- SIGNATURE BLOCK -->
+                    <div class="salary-sheet-signatures" style="margin-top:40px; display:flex; justify-content:space-between; text-align:center; font-size:12px;">
+                        <div>
+                            <div style="border-top:1px solid #000; width:130px; margin-bottom:4px;"></div>
+                            <span>Time Keeper</span>
+                        </div>
+                        <div>
+                            <div style="border-top:1px solid #000; width:130px; margin-bottom:4px;"></div>
+                            <span>Checked By (HR)</span>
+                        </div>
+                        <div>
+                            <div style="border-top:1px solid #000; width:130px; margin-bottom:4px;"></div>
+                            <span>Floor Incharge</span>
+                        </div>
+                        <div>
+                            <div style="border-top:1px solid #000; width:130px; margin-bottom:4px;"></div>
+                            <span>Managing Director</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <!-- END OF attSubDailyView -->
+
+                <!-- SUB VIEW 2: MONTHLY ATTENDANCE MATRIX -->
+<div id="attSubMonthlyView" style="display:none;">
+                    <div class="card-header flex-between" style="flex-wrap:wrap; gap:12px;">
+                        <div>
+                            <h2>🗓️ পুরো মাসের হাজিরা শিট ও ওভারটাইম (Full Month Attendance Sheet)</h2>
+                            <p class="text-muted">ZKTime.Net ডাটাবেজ থেকে পুরো মাসের মোট হাজিরা দিন, অনুপস্থিতি, সাপ্তাহিক ছুটি ও ওটি হিসাব। যেকোনো কর্মীর ১-ক্লিকে পুরো মাসের বিস্তারিত লগ দেখুন।</p>
+                        </div>
+                        <div class="header-actions" style="display:flex; gap:10px; align-items:center;">
+                            <button type="button" class="btn btn-primary" onclick="printMonthlyAttendance()">🖨️ প্রিন্ট করুন</button>
+                            <button type="button" class="btn btn-secondary" onclick="exportMonthlyAttendanceToExcel()">📥 এক্সেল ডাউনলোড</button>
+                        </div>
+                    </div>
+
+                    <!-- MONTH SELECTOR & ACTIONS CARD -->
+                    <div class="payroll-config-card" style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:18px; margin-bottom:20px;">
+                        <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end;">
+                            <div style="width:220px;">
+                                <label style="font-weight:600; display:block; margin-bottom:6px; color:#1e293b;">📅 মাস নির্বাচন করুন (Select Month):</label>
+                                <select id="monthlyAttMonthSelect" onchange="loadMonthlyAttendance()" style="padding:9px; background:white; border:1px solid #cbd5e1; border-radius:6px; width:100%; font-weight:600; color:#0f172a;">
+                                    <option value="October 2026" selected>October 2026 (অক্টোবর ২০২৬)</option>
+                                    <option value="November 2026">November 2026 (নভেম্বর ২০২৬)</option>
+                                    <option value="September 2026">September 2026 (সেপ্টেম্বর ২০২৬)</option>
+                                    <option value="August 2026">August 2026 (আগস্ট ২০২৬)</option>
+                                    <option value="July 2026">July 2026 (জুলাই ২০২৬)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-success" style="padding:10px 18px; font-weight:bold; font-size:13px; background:#16a34a; color:white; border-radius:6px; cursor:pointer;" onclick="syncPayrollFromAttendance()">⚡ পুরো মাসের হাজিরা সেলারি শিটে ইনপুট করুন</button>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-secondary" style="padding:10px 16px; font-weight:600; font-size:13px; cursor:pointer;" onclick="loadMonthlyAttendance()">🔄 রিফ্রেশ ডাটা</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MONTHLY SUMMARY COUNTERS -->
+                    <div class="payroll-summary-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin-bottom:20px;">
+                        <div style="background:#eff6ff; padding:12px; border-radius:8px; border-left:4px solid #3b82f6;">
+                            <div style="font-size:11px; color:#475569;">মোট কর্মচারী / শ্রমিক</div>
+                            <div id="monthlyStatTotalWorkers" style="font-size:20px; font-weight:bold; color:#1e3a8a;">০ জন</div>
+                        </div>
+                        <div style="background:#ecfdf5; padding:12px; border-radius:8px; border-left:4px solid #10b981;">
+                            <div style="font-size:11px; color:#475569;">মোট উপস্থিতি দিন (P)</div>
+                            <div id="monthlyStatPresentDays" style="font-size:20px; font-weight:bold; color:#065f46;">০ দিন</div>
+                        </div>
+                        <div style="background:#fee2e2; padding:12px; border-radius:8px; border-left:4px solid #ef4444;">
+                            <div style="font-size:11px; color:#475569;">মোট অনুপস্থিতি দিন (A)</div>
+                            <div id="monthlyStatAbsentDays" style="font-size:20px; font-weight:bold; color:#991b1b;">০ দিন</div>
+                        </div>
+                        <div style="background:#fefce8; padding:12px; border-radius:8px; border-left:4px solid #eab308;">
+                            <div style="font-size:11px; color:#854d0e;">মোট সাপ্তাহিক ছুটি (H)</div>
+                            <div id="monthlyStatHolidays" style="font-size:20px; font-weight:bold; color:#a16207;">০ দিন</div>
+                        </div>
+                        <div style="background:#fff7ed; padding:12px; border-radius:8px; border-left:4px solid #ea580c;">
+                            <div style="font-size:11px; color:#9a3412;">⚡ মোট ওভারটাইম (OT)</div>
+                            <div id="monthlyStatOTHours" style="font-size:20px; font-weight:bold; color:#c2410c;">০ ঘণ্টা</div>
+                        </div>
+                    </div>
+
+                    <!-- MONTHLY FILTER & SEARCH BAR -->
+                    <div class="payroll-filter-bar no-print" style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px 16px; margin-bottom:15px;">
+                        <div style="flex:1; min-width:240px; position:relative;">
+                            <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:15px;">🔍</span>
+                            <input type="text" id="monthlyAttSearch" placeholder="কার্ড নং, নাম, পদবী বা সেকশন দিয়ে খুঁজুন..." oninput="filterMonthlyAttendanceTable()" style="width:100%; padding:8px 12px 8px 36px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; outline:none;">
+                        </div>
+                        <div style="width:180px;">
+                            <select id="monthlyAttSectionFilter" onchange="filterMonthlyAttendanceTable()" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; background:white;">
+                                <option value="">সকল সেকশন (All)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-secondary" onclick="resetMonthlyAttFilter()" style="padding:8px 14px; font-size:13px; cursor:pointer;">🔄 রিসেট</button>
+                        </div>
+                    </div>
+
+                    <!-- MONTHLY ATTENDANCE TABLE AREA -->
+                    <div class="salary-sheet-paper" id="monthlyAttPrintArea">
+                        <div class="salary-print-header" style="text-align:center; margin-bottom:15px;">
+                            <h2 class="printFactoryNameEn" style="font-size:20px; margin:0; text-transform:uppercase;">FAIR POLY LTD.</h2>
+                            <h3 class="printFactoryNameBn" style="font-size:16px; margin:2px 0 0 0;">ফেয়ার পলি লিঃ</h3>
+                            <p style="font-size:12px; margin:2px 0; color:#555;">কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।</p>
+                            <h4 style="margin:6px 0 0 0; font-size:15px; font-weight:bold; text-decoration:underline;">
+                                MONTHLY BIOMETRIC ATTENDANCE & OVERTIME SUMMARY - <span id="monthlyAttTitle">OCTOBER 2026</span>
+                            </h4>
+                        </div>
+
+                        <div style="overflow-x:auto;">
+                            <table class="salary-data-table" id="monthlyAttTable" style="width:100%; border-collapse:collapse; font-size:11.5px; text-align:center;">
+                                <thead>
+                                    <tr style="background:#f1f5f9; font-weight:bold;">
+                                        <th style="border:1px solid #94a3b8; padding:7px 4px; width:35px;">SL</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:65px;">Card No</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 8px; text-align:left;">Name of Employee</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 6px;">Designation</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 6px;">Section</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:60px;">Month Days</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:60px; color:#15803d;">Present (P)</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:50px; color:#b45309;">Late</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:55px; color:#a16207;">Holiday (H)</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:55px; color:#0284c7;">Leave (L)</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:55px; color:#b91c1c;">Absent (A)</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:65px;">Day Shift</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:65px;">Night Shift</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 5px; width:70px; color:#c2410c;">OT (Hrs)</th>
+                                        <th style="border:1px solid #94a3b8; padding:7px 6px; width:160px;" class="no-print">১-ক্লিকে বিস্তারিত ও অ্যাকশন</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="monthlyAttTableBody">
+                                    <tr>
+                                        <td colspan="15" style="padding:25px; color:#64748b; font-size:13px; text-align:center;">
+                                            পুরো মাসের হাজিরা ডাটা লোড করা হচ্ছে... অনুগ্রহ করে অপেক্ষা করুন।
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF attSubMonthlyView -->
+
+            </div>
+        </div>
+        </main>
+    </div>
+
+<!-- EMPLOYEE LIST MODAL -->
+    <div id="employeeModal" class="modal-overlay" onclick="closeEmployeeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>👥 সংরক্ষিত কর্মী তালিকা</h3>
+                <button class="btn-close" onclick="closeEmployeeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>আইডি</th>
+                            <th>ছবি</th>
+                            <th>নাম (বাংলা ও ইংরেজি)</th>
+                            <th>পদবী</th>
+                            <th>সেকশন</th>
+                            <th>মোট বেতন</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="empTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FACTORY SETUP MODAL -->
+    <div id="factoryModal" class="modal-overlay" onclick="closeFactoryModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>⚙️ ফ্যাক্টরি / কোম্পানি প্রোফাইল সেটআপ</h3>
+                <button class="btn-close" onclick="closeFactoryModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="factoryForm" onsubmit="event.preventDefault(); saveFactorySettings();">
+                    <div class="form-grid grid-2">
+                        <div class="form-group">
+                            <label>কোম্পানির নাম (বাংলা)*</label>
+                            <input type="text" id="fact_name_bn" required placeholder="ফেয়ার পলি লিঃ">
+                        </div>
+                        <div class="form-group">
+                            <label>কোম্পানির নাম (ইংরেজি)*</label>
+                            <input type="text" id="fact_name_en" required placeholder="FAIR POLY LTD.">
+                        </div>
+                        <div class="form-group">
+                            <label>কারখানার পূর্ণ ঠিকানা (বাংলা)*</label>
+                            <input type="text" id="fact_address_bn" required placeholder="কান্দি বোলিয়ারপুর, হরিণধরা, হেমায়েতপুর, সাভার, ঢাকা।">
+                        </div>
+                        <div class="form-group">
+                            <label>কারখানার পূর্ণ ঠিকানা (ইংরেজি)*</label>
+                            <input type="text" id="fact_address_en" required placeholder="Kandi Boliarpur, Horindhora, Hemayetpur, Savar, Dhaka.">
+                        </div>
+                        <div class="form-group">
+                            <label>ফোন / জরুরি হেল্পলাইন</label>
+                            <input type="text" id="fact_phone" placeholder="০১৭৭৭-৬৭৬৫২৬, ০১৮১৬-৩৭২৮৪৮">
+                        </div>
+                        <div class="form-group">
+                            <label>এইচ.আর / স্বাক্ষরকারীর পদবী</label>
+                            <input type="text" id="fact_hr_title" placeholder="ব্যবস্থাপক (প্রশাসন, মানবসম্পদ ও কমপ্লায়েন্স)">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-15">
+                        <label>কোম্পানি লোগো আপলোড (PNG/JPG):</label>
+                        <div class="flex-row" style="align-items:center;">
+                            <img id="factLogoPreview" src="/static/img/default_logo.png" style="width:60px; height:60px; object-fit:contain; border:1px solid #ccc; padding:2px; border-radius:4px;">
+                            <label class="btn-upload" style="margin-left:10px;">
+                                📁 নতুন লোগো ফাইল নির্বাচন
+                                <input type="file" accept="image/*" onchange="handleFactoryLogoUpload(event)">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions-bottom mt-20">
+                        <button type="submit" class="btn btn-success">💾 ফ্যাক্টরি তথ্য সংরক্ষণ করুন</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+        <!-- TAB 14: MONTHLY SALARY SHEET & ATTENDANCE -->
+
+    <!-- MODAL: নতুন ছুটির এন্ট্রি যুক্ত করুন (ADD LEAVE ENTRY MODAL) -->
+    <div id="leaveModal" class="modal-overlay" onclick="closeLeaveModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>📅 নতুন ছুটির এন্ট্রি যুক্ত করুন (ফরম - ৯)</h3>
+                <button type="button" class="btn-close" onclick="closeLeaveModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="leaveEntryForm" onsubmit="event.preventDefault(); saveLeaveEntry();">
+                    <div class="form-grid grid-2">
+                        <div class="form-group">
+                            <label>ছুটির ধরণ নির্বাচন করুন*</label>
+                            <select id="modal_leave_type" required>
+                                <option value="CL">নৈমিত্তিক ছুটি (Casual Leave - CL)</option>
+                                <option value="SL">অসুস্থতাজনিত ছুটি (Sick Leave - SL)</option>
+                                <option value="EL">অর্জিত ছুটি (Earned Leave - EL)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ছুটির মোট দিন সংখ্যা*</label>
+                            <input type="number" id="modal_leave_days" min="0.5" step="0.5" required placeholder="যেমনঃ ২">
+                        </div>
+                        <div class="form-group">
+                            <label>ছুটি শুরুর তারিখ*</label>
+                            <input type="date" id="modal_leave_start_iso" required onchange="syncModalLeaveStartDate(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>ছুটি শেষের তারিখ (ঐচ্ছিক)</label>
+                            <input type="date" id="modal_leave_end_iso" onchange="syncModalLeaveEndDate(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>ছুটির তারিখ (বাংলায় ফরম্যাট)</label>
+                            <input type="text" id="modal_leave_date_bn" placeholder="যেমনঃ ১০.০৫.২০২৬">
+                        </div>
+                        <div class="form-group">
+                            <label>অনুমোদনকারী কর্মকর্তা</label>
+                            <input type="text" id="modal_leave_approver" placeholder="ম্যানেজার (এইচ.আর)">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-10">
+                        <label>ছুটির কারণ / আবেদন বিবরণ</label>
+                        <input type="text" id="modal_leave_reason" placeholder="যেমনঃ পারিবারিক প্রয়োজন / অসুস্থতা">
+                    </div>
+
+                    <div class="form-actions-bottom mt-20">
+                        <button type="button" class="btn btn-secondary" onclick="closeLeaveModal()">বাতিল</button>
+                        <button type="submit" class="btn btn-success">💾 ছুটির এন্ট্রি সংরক্ষণ করুন</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: স্যালারি ও অ্যাটেন্ডেন্স এন্ট্রি এডিট করুন (EDIT PAYROLL RECORD MODAL) -->
+    <div id="editPayrollModal" class="modal-overlay" onclick="closeEditPayrollModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width:600px;">
+            <div class="modal-header">
+                <h3>✏️ স্যালারি ও অ্যাটেন্ডেন্স তথ্য সংশোধন (Edit Record)</h3>
+                <button type="button" class="btn-close" onclick="closeEditPayrollModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editPayrollForm" onsubmit="event.preventDefault(); saveEditedPayrollRecord();">
+                    <input type="hidden" id="edit_payroll_id">
+                    <div class="form-grid grid-2">
+                        <div class="form-group">
+                            <label>কার্ড নং (Card No)</label>
+                            <input type="text" id="edit_payroll_card" readonly class="bg-readonly">
+                        </div>
+                        <div class="form-group">
+                            <label>কর্মীর নাম (Name)</label>
+                            <input type="text" id="edit_payroll_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>পদবী (Designation)</label>
+                            <input type="text" id="edit_payroll_designation">
+                        </div>
+                        <div class="form-group">
+                            <label>সেকশন (Section)</label>
+                            <input type="text" id="edit_payroll_section">
+                        </div>
+                        <div class="form-group">
+                            <label>গ্রেড (Grade)</label>
+                            <input type="text" id="edit_payroll_grade">
+                        </div>
+                        <div class="form-group">
+                            <label>গ্রস স্যালারি (Gross Salary - ৳)</label>
+                            <input type="number" id="edit_payroll_gross" required oninput="recalcEditPayrollModal()">
+                        </div>
+                        <div class="form-group">
+                            <label>উপস্থিত দিন (Present Days)</label>
+                            <input type="number" id="edit_payroll_present" min="0" max="31" required oninput="recalcEditPayrollModal()">
+                        </div>
+                        <div class="form-group">
+                            <label>অনুপস্থিত দিন (Absent Days)</label>
+                            <input type="number" id="edit_payroll_absent" min="0" max="31" required oninput="recalcEditPayrollModal()">
+                        </div>
+                        <div class="form-group">
+                            <label>ছুটি / হলিডে (Holiday Days)</label>
+                            <input type="number" id="edit_payroll_holiday" min="0" max="31" required oninput="recalcEditPayrollModal()">
+                        </div>
+                        <div class="form-group">
+                            <label>অনুমোদিত ছুটি দিন (Leave Days)</label>
+                            <input type="number" id="edit_payroll_leave" min="0" max="31" value="0" oninput="recalcEditPayrollModal()">
+                        </div>
+                        <div class="form-group">
+                            <label>ওভারটাইম ঘণ্টা (OT Hours)</label>
+                            <input type="number" id="edit_payroll_ot_hours" step="0.1" min="0" required oninput="recalcEditPayrollModal()">
+                        </div>
+                        <div class="form-group">
+                            <label>মাসের মোট দিন (Month Days)</label>
+                            <input type="number" id="edit_payroll_days_in_month" min="28" max="31" value="30" required oninput="recalcEditPayrollModal()">
+                        </div>
+
+                        <!-- LIVE FACTORY FORMULA CALCULATION BREAKDOWN -->
+                        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:12px; margin-top:8px; grid-column:span 2;">
+                            <div style="font-weight:700; margin-bottom:8px; color:#1e293b; border-bottom:1px solid #e2e8f0; padding-bottom:4px; font-size:13px;">
+                                📊 ফ্যাক্টরি সূত্র অনুযায়ী তাৎক্ষণিক হিসাব বিবরণী:
+                            </div>
+                            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; font-size:12px;">
+                                <div>মূল বেতন (Basic): <b id="modal_calc_basic">৳ ০</b></div>
+                                <div>বাড়ি ভাড়া (H/Rent): <b id="modal_calc_house">৳ ০</b></div>
+                                <div>অনুপস্থিতি কর্তন: <b id="modal_calc_abs_ded" style="color:#b91c1c;">৳ ০</b></div>
+                                <div>ওভারটাইম রেট: <b id="modal_calc_ot_rate">৳ ০</b></div>
+                                <div>ওভারটাইম টাকা: <b id="modal_calc_ot_tk" style="color:#1d4ed8;">৳ ০</b></div>
+                                <div>প্রদেয় মোট দিন: <b id="modal_calc_payable_days">০ দিন</b></div>
+                            </div>
+                            <div style="margin-top:10px; padding-top:8px; border-top:1px dashed #cbd5e1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                                <div style="font-size:13px;">প্রদেয় মূল বেতন (Net Wages): <b id="modal_calc_net_salary" style="font-size:16px; color:#0f172a;">৳ ০</b></div>
+                                <div style="font-size:14px; color:#15803d; font-weight:bold;">সর্বমোট প্রদেয় টাকা (ওটিসহ): <span id="modal_calc_total_payable" style="font-size:17px; color:#15803d;">৳ ০</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions-bottom mt-20">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditPayrollModal()">বাতিল</button>
+                        <button type="submit" class="btn btn-success" style="font-weight:bold;">💾 সংশোধন ডাটাবেজে সংরক্ষণ করুন</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+
+    <!-- INDIVIDUAL MONTHLY ATTENDANCE MODAL (1-CLICK DETAIL) -->
+    <div id="individualMonthlyAttModal" class="modal-overlay" onclick="closeIndividualMonthlyAttModal(event)" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.7); z-index:99999; justify-content:center; align-items:center;">
+        <div class="modal-content" onclick="event.stopPropagation()" style="background:#ffffff; max-width:980px; width:95%; max-height:92vh; display:flex; flex-direction:column; padding:0; border-radius:12px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.3);">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background:#1e3a8a; color:white; padding:16px 22px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:14px;">
+                    <img id="indivModalAvatar" src="/static/img/default_logo.png" style="width:48px; height:54px; object-fit:cover; border-radius:6px; border:2px solid #93c5fd; background:white;">
+                    <div>
+                        <h3 id="indivModalName" style="margin:0; font-size:18px; color:white;">শ্রমিকের নাম</h3>
+                        <p style="margin:2px 0 0 0; font-size:12.5px; color:#bfdbfe;">
+                            কার্ড নং: <strong id="indivModalCard" style="color:#ffffff;">-</strong> | 
+                            পদবী: <span id="indivModalDesig">-</span> | 
+                            সেকশন: <span id="indivModalSec">-</span> | 
+                            গ্রস বেতন: <strong id="indivModalSalary">-</strong> ৳
+                        </p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button type="button" class="btn-close" onclick="closeIndividualMonthlyAttModal()" style="color:white; font-size:26px; background:transparent; border:none; cursor:pointer;">&times;</button>
+                </div>
+            </div>
+
+            <!-- Modal Sub-bar: Month Selector & Actions -->
+            <div style="background:#f1f5f9; border-bottom:1px solid #cbd5e1; padding:12px 20px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <label style="font-weight:600; font-size:13px; color:#1e293b;">📅 মাস পরিবর্তন:</label>
+                    <select id="indivModalMonthSelect" onchange="onIndivMonthSelectChanged()" style="padding:6px 12px; border:1px solid #cbd5e1; border-radius:6px; font-weight:600; font-size:13px; background:white;">
+                        <!-- Auto-filled by JS -->
+                    </select>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <button type="button" class="btn btn-sm btn-success" style="background:#16a34a; color:white; border:none; padding:8px 16px; font-weight:bold; font-size:12.5px; border-radius:6px; cursor:pointer;" onclick="syncCurrentIndivToPayroll()">
+                        ⚡ সেলারি শিটে এই হাজিরা ইনপুট করুন
+                    </button>
+                    <button type="button" class="btn btn-sm" style="background:#2563eb; color:white; border:none; padding:8px 14px; font-weight:bold; font-size:12.5px; border-radius:6px; cursor:pointer;" onclick="printIndividualAttendanceCard()">
+                        🖨️ প্রিন্ট
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary" style="padding:8px 14px; font-size:12.5px; border-radius:6px; cursor:pointer;" onclick="exportIndividualAttendanceToExcel()">
+                        📥 এক্সেল
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="modal-body" id="indivModalPrintArea" style="padding:18px 22px; overflow-y:auto; flex:1;">
+                <!-- Summary Metrics Grid -->
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:16px;">
+                    <div style="background:#eff6ff; padding:8px 10px; border-radius:6px; border-left:3px solid #3b82f6;">
+                        <div style="font-size:11px; color:#475569;">মাসের দিন</div>
+                        <div id="indivStatMonthDays" style="font-size:16px; font-weight:bold; color:#1e3a8a;">৩১ দিন</div>
+                    </div>
+                    <div style="background:#ecfdf5; padding:8px 10px; border-radius:6px; border-left:3px solid #10b981;">
+                        <div style="font-size:11px; color:#065f46;">উপস্থিত দিন</div>
+                        <div id="indivStatPresentDays" style="font-size:16px; font-weight:bold; color:#065f46;">০ দিন</div>
+                    </div>
+                    <div style="background:#fee2e2; padding:8px 10px; border-radius:6px; border-left:3px solid #ef4444;">
+                        <div style="font-size:11px; color:#991b1b;">অনুপস্থিত দিন</div>
+                        <div id="indivStatAbsentDays" style="font-size:16px; font-weight:bold; color:#991b1b;">০ দিন</div>
+                    </div>
+                    <div style="background:#e0f2fe; padding:8px 10px; border-radius:6px; border-left:3px solid #0284c7;">
+                        <div style="font-size:11px; color:#0369a1;">অনুমোদিত ছুটি (L)</div>
+                        <div id="indivStatLeaveDays" style="font-size:16px; font-weight:bold; color:#0284c7;">০ দিন</div>
+                    </div>
+                    <div style="background:#fefce8; padding:8px 10px; border-radius:6px; border-left:3px solid #eab308;">
+                        <div style="font-size:11px; color:#854d0e;">সাপ্তাহিক ছুটি (H)</div>
+                        <div id="indivStatHolidays" style="font-size:16px; font-weight:bold; color:#a16207;">০ দিন</div>
+                    </div>
+                    <div style="background:#fef3c7; padding:8px 10px; border-radius:6px; border-left:3px solid #f59e0b;">
+                        <div style="font-size:11px; color:#92400e;">বিলম্ব (Late)</div>
+                        <div id="indivStatLateDays" style="font-size:16px; font-weight:bold; color:#92400e;">০ দিন</div>
+                    </div>
+                    <div style="background:#f5f3ff; padding:8px 10px; border-radius:6px; border-left:3px solid #8b5cf6;">
+                        <div style="font-size:11px; color:#5b21b6;">☀️ ডে / 🌙 নাইট</div>
+                        <div id="indivStatShifts" style="font-size:14px; font-weight:bold; color:#6d28d9;">০ / ০</div>
+                    </div>
+                    <div style="background:#fff7ed; padding:8px 10px; border-radius:6px; border-left:3px solid #ea580c;">
+                        <div style="font-size:11px; color:#9a3412;">⚡ মোট ওটি (OT)</div>
+                        <div id="indivStatOTHours" style="font-size:16px; font-weight:bold; color:#c2410c;">০ ঘণ্টা</div>
+                    </div>
+                </div>
+
+                <!-- Day-by-Day Table -->
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center;">
+                        <thead>
+                            <tr style="background:#f1f5f9; font-weight:bold; color:#1e293b;">
+                                <th style="border:1px solid #cbd5e1; padding:6px 4px; width:45px;">তারিখ</th>
+                                <th style="border:1px solid #cbd5e1; padding:6px 6px; width:75px;">দিন (Day)</th>
+                                <th style="border:1px solid #cbd5e1; padding:6px 8px; width:135px;">শিফট</th>
+                                <th style="border:1px solid #cbd5e1; padding:6px 6px; width:75px; color:#047857;">ইন-টাইম</th>
+                                <th style="border:1px solid #cbd5e1; padding:6px 6px; width:75px; color:#1d4ed8;">আউট-টাইম</th>
+                                <th style="border:1px solid #cbd5e1; padding:6px 6px; width:100px;">কাজের সময়</th>
+                                <th style="border:1px solid #cbd5e1; padding:6px 6px; width:75px; color:#b45309;">ওভারটাইম</th>
+                                <th style="border:1px solid #cbd5e1; padding:6px 6px; width:105px;">স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody id="indivModalTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

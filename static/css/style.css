@@ -1,0 +1,1577 @@
+/* =====================================================================
+   FAIR POLY LTD. - HR & PERSONAL FILE MANAGEMENT SYSTEM STYLES
+   UNICODE FONT: KALPURUSH (AUTHENTIC BANGLA TYPOGRAPHY)
+   ===================================================================== */
+
+@font-face {
+    font-family: 'Kalpurush';
+    src: url('/static/fonts/kalpurush.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --primary: #1e3a8a;
+    --primary-light: #3b82f6;
+    --primary-hover: #1d4ed8;
+    --secondary: #475569;
+    --success: #15803d;
+    --success-hover: #166534;
+    --danger: #b91c1c;
+    --warning: #b45309;
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --border: #cbd5e1;
+    --border-dark: #334155;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --font-bn: 'Kalpurush', 'Kalpurush ANSI', 'SolaimanLipi', sans-serif;
+    --font-en: 'Times New Roman', Times, serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Kalpurush', 'Times New Roman', Times, serif;
+}
+
+/* ENGLISH TEXT STYLING WITH TIMES NEW ROMAN */
+.en-text,
+.printFactoryNameEn,
+.d-name-en,
+.d-father-en,
+.d-spouse-en,
+.d-pres-en,
+.doctor-certificate,
+.medical-section,
+.id-title-en,
+.id-back-info,
+.english-font,
+[lang="en"] {
+    font-family: 'Times New Roman', Times, Georgia, serif !important;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.5;
+    font-size: 15px;
+    font-family: 'Kalpurush', 'Times New Roman', Times, serif;
+}
+
+/* TOP NAVBAR */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 10px 24px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo-img {
+    height: 44px;
+    width: 44px;
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.brand-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #f8fafc;
+}
+
+.brand-sub {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 6px 14px;
+    width: 280px;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    width: 100%;
+    margin-left: 8px;
+    font-size: 14px;
+}
+
+.search-box input::placeholder {
+    color: #94a3b8;
+}
+
+.nav-right {
+    display: flex;
+    gap: 8px;
+}
+
+/* BUTTONS */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary { background: var(--primary-light); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+
+.btn-secondary { background: #334155; color: white; }
+.btn-secondary:hover { background: #475569; }
+
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { background: var(--success-hover); }
+
+.btn-print { background: #7c3aed; color: white; }
+.btn-print:hover { background: #6d28d9; }
+
+.btn-outline { background: transparent; border: 1px solid #64748b; color: #f1f5f9; }
+.btn-outline:hover { background: #334155; }
+
+.btn-sm { padding: 4px 10px; font-size: 13px; }
+.btn-lg { padding: 12px 24px; font-size: 16px; }
+
+/* PRIMARY MODULE TOP NAVIGATION BAR */
+.top-module-nav {
+    background: #ffffff;
+    border-bottom: 2px solid #cbd5e1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 64px;
+    z-index: 990;
+    padding: 0 24px;
+}
+
+.top-nav-tabs {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.top-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 6px 6px 0 0;
+}
+
+.top-tab-btn:hover {
+    color: var(--primary);
+    background: #f1f5f9;
+}
+
+.top-tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    background: #eff6ff;
+    font-weight: 700;
+}
+
+.top-tab-btn .tab-icon {
+    font-size: 18px;
+}
+
+.tab-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 12px;
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.tab-pill.pill-blue {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.tab-pill.pill-green {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+/* APP LAYOUT */
+.app-container {
+    display: flex;
+    min-height: calc(100vh - 115px);
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 310px;
+    background: #ffffff;
+    border-right: 1px solid var(--border);
+    padding: 16px;
+    flex-shrink: 0;
+    max-height: calc(100vh - 65px);
+    overflow-y: auto;
+}
+
+.emp-profile-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.avatar-badge {
+    width: 52px;
+    height: 52px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    border: 1px solid #94a3b8;
+}
+
+.avatar-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.emp-brief h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.emp-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.badge-tag {
+    display: inline-block;
+    background: #dbeafe;
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-top: 4px;
+}
+
+.sidebar-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+.doc-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.doc-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 13.5px;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.doc-item:hover {
+    background: #f1f5f9;
+    color: var(--primary);
+}
+
+.doc-item.active {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.doc-num {
+    font-size: 11px;
+    font-weight: 700;
+    background: #e2e8f0;
+    color: #475569;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.doc-item.active .doc-num {
+    background: var(--primary);
+    color: white;
+}
+
+.doc-name {
+    flex-grow: 1;
+}
+
+.star-badge {
+    background: #fef08a;
+    color: #854d0e;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+/* CONTENT AREA */
+.content-area {
+    flex-grow: 1;
+    padding: 24px;
+    max-height: calc(100vh - 65px);
+    overflow-y: auto;
+    background: #f8fafc;
+}
+
+.tab-pane {
+    display: none !important;
+}
+
+.tab-pane.active {
+    display: block !important;
+}
+
+.tab-pane.active.printable-page {
+    display: flex !important;
+    justify-content: center;
+}
+
+/* CARD BOX FOR MAIN FORM */
+.card-box {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 14px;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 14px;
+}
+
+.form-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.form-group input, 
+.form-group select,
+.form-group textarea {
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #0f172a;
+    outline: none;
+    transition: border 0.15s;
+}
+
+.form-group input:focus, 
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.bg-readonly {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+}
+
+.flex-row {
+    display: flex;
+    gap: 8px;
+}
+
+.flex-row input {
+    flex: 1;
+}
+
+/* PHOTO UPLOAD BOXES */
+.photos-upload-wrapper {
+    display: flex;
+    gap: 24px;
+    margin-top: 10px;
+}
+
+.photo-upload-box {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.photo-preview-frame {
+    width: 90px;
+    height: 110px;
+    border: 2px dashed #94a3b8;
+    border-radius: 6px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.photo-preview-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-preview-frame .placeholder-text {
+    font-size: 12px;
+    color: #94a3b8;
+    text-align: center;
+}
+
+.photo-upload-ctrls {
+    flex-grow: 1;
+}
+
+.photo-upload-ctrls h4 {
+    font-size: 14px;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.photo-upload-ctrls p {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.photo-upload-ctrls input[type="file"] {
+    display: none;
+}
+
+.btn-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #3b82f6;
+    color: white;
+    border-radius: 5px;
+    font-size: 12.5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-upload:hover {
+    background: #2563eb;
+}
+
+.btn-remove-photo {
+    padding: 6px 10px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 6px;
+    font-weight: 600;
+}
+
+.address-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.address-block {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 16px;
+}
+
+.address-block h4 {
+    font-size: 14px;
+    color: var(--primary);
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 6px;
+}
+
+/* SALARY CHIPS */
+.salary-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.chip {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+}
+
+.chip-lbl {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.chip-val {
+    font-size: 17px;
+    color: #0f172a;
+}
+
+.chip-highlight {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+}
+
+.chip-highlight .chip-val {
+    color: #059669;
+}
+
+.chip-accent {
+    background: #fefce8;
+    border-color: #fde047;
+}
+
+.chip-accent .chip-val {
+    color: #b45309;
+}
+
+/* GRADE PRESETS & LEGAL NOTES */
+.grade-presets-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+
+.preset-label {
+    font-size: 13px;
+    color: #334155;
+    margin-right: 4px;
+}
+
+.btn-preset {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 13px;
+    color: #1e293b;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+}
+
+.btn-preset:hover {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+}
+
+.alert-box {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    margin-top: 12px;
+}
+
+.alert-warning {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+.law-info-note {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-top: 12px;
+    line-height: 1.6;
+}
+
+.form-actions-bottom {
+    margin-top: 24px;
+    text-align: center;
+}
+
+/* =====================================================================
+   PRINTABLE DOCUMENT LAYOUT (A4 PAGE STANDARDS)
+   ===================================================================== */
+
+.printable-page {
+    justify-content: center;
+}
+
+.a4-page {
+    background: #ffffff;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 20mm;
+    margin: 0 auto 30px auto;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    color: #000000;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* COMPANY BRANDED HEADER ON PRINT DOCUMENTS */
+.company-doc-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+}
+
+.doc-logo-img {
+    height: 55px;
+    width: 55px;
+    object-fit: contain;
+}
+
+.doc-company-info {
+    text-align: center;
+}
+
+.doc-company-info h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+
+.doc-company-info h4 {
+    font-size: 14px;
+    color: #333;
+    margin: 1px 0;
+}
+
+.doc-company-info p {
+    font-size: 12px;
+    color: #444;
+    margin: 0;
+}
+
+.doc-title-center {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.underlined-title {
+    display: inline-block;
+    border-bottom: 2px solid #000;
+    font-size: 17px;
+    font-weight: 700;
+    margin-top: 6px;
+    padding-bottom: 2px;
+}
+
+.doc-header-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.office-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    min-width: 220px;
+}
+
+/* DOCUMENT WORKER PHOTO FRAME (FOR ABEDON, FITNESS, APPOINTMENT LETTER) */
+.doc-photo-box {
+    width: 25mm;
+    height: 30mm;
+    border: 1.5px solid #000;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #fdfdfd;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.doc-worker-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.doc-photo-placeholder {
+    font-size: 11px;
+    line-height: 1.3;
+    color: #4b5563;
+    padding: 4px;
+}
+
+.office-box-title {
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid #000;
+    margin-bottom: 6px;
+    padding-bottom: 2px;
+}
+
+.office-table td {
+    padding: 2px 4px;
+}
+
+.subject-line {
+    margin: 16px 0 10px 0;
+    font-size: 15px;
+}
+
+.salutation {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.body-para {
+    text-align: justify;
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+
+/* TABLES IN PRINT DOCUMENTS */
+.bio-table, 
+.grid-table,
+.salary-breakdown-table,
+.salary-grid-table,
+.leave-grid-table,
+.modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+}
+
+.bio-table td {
+    padding: 5px 6px;
+    vertical-align: top;
+}
+
+.grid-table td, 
+.grid-table th {
+    border: 1px solid #000;
+    padding: 6px 8px;
+}
+
+.compact-table td {
+    padding: 4px 6px;
+}
+
+.highlight-row {
+    background-color: #f1f5f9;
+}
+
+.salary-grid-table th,
+.salary-grid-table td {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+.salary-grid-table th {
+    background: #f8fafc;
+    font-weight: 700;
+}
+
+.leave-grid-table th,
+.leave-grid-table td {
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.terms-list {
+    padding-left: 20px;
+    font-size: 12.5px;
+    line-height: 1.7;
+}
+
+.terms-list li {
+    margin-bottom: 4px;
+    text-align: justify;
+}
+
+/* SIGNATURE BLOCKS */
+.signature-grid-2 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.signature-grid-3 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sig-line {
+    border-top: 1px dashed #000;
+    padding-top: 6px;
+    display: inline-block;
+    min-width: 150px;
+    font-size: 13px;
+}
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.mt-5 { margin-top: 5px; }
+.mt-10 { margin-top: 10px; }
+.mt-15 { margin-top: 15px; }
+.mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+.mt-40 { margin-top: 40px; }
+.mt-50 { margin-top: 50px; }
+
+/* =====================================================================
+   ID CARD SECTION (FRONT & BACK DESIGN WITH LOGO, PHOTO & QR CODE)
+   ===================================================================== */
+
+.id-cards-wrapper {
+    display: flex;
+    gap: 30px;
+    margin-top: 25px;
+    justify-content: center;
+}
+
+/* EXACT ID CARD SIZE: Width 5.4 cm (54mm) x Height 8.6 cm (86mm) [CR80 Standard] */
+.id-card {
+    width: 5.4cm;
+    height: 8.6cm;
+    min-width: 5.4cm;
+    max-width: 5.4cm;
+    min-height: 8.6cm;
+    max-height: 8.6cm;
+    border: 1.5px solid #0f172a;
+    border-radius: 6px;
+    padding: 3.5mm 3.5mm;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.id-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-bottom: 1.5px solid #1e3a8a;
+    padding-bottom: 2px;
+    margin-bottom: 3px;
+}
+
+.id-header-logo {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.id-header-text h3 {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 0;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.id-header-text p {
+    font-size: 8px;
+    color: #475569;
+    margin: 0;
+    letter-spacing: 0.3px;
+    text-align: center;
+}
+
+/* ID CARD PHOTO CENTERED RIGHT UNDER HEADER */
+.id-photo-centered {
+    display: flex;
+    justify-content: center;
+    margin: 2px 0 3px 0;
+}
+
+.id-photo-box {
+    width: 23mm;
+    height: 27mm;
+    border: 1.5px solid #1e3a8a;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.id-photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.id-photo-placeholder {
+    font-size: 9px;
+    color: #94a3b8;
+    text-align: center;
+}
+
+/* DETAILS TABLE BELOW PHOTO */
+.id-details-table {
+    width: 100%;
+    font-size: 9px;
+    line-height: 1.25;
+    margin-bottom: 2px;
+    border-collapse: collapse;
+}
+
+.id-details-table td {
+    padding: 1px 2px;
+    vertical-align: middle;
+}
+
+.id-details-table td.id-lbl {
+    width: 38%;
+    color: #475569;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.id-details-table td.id-val {
+    width: 62%;
+    color: #0f172a;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.id-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5px;
+    border-top: 1px dashed #64748b;
+    padding-top: 2px;
+    margin-top: 2px;
+    color: #334155;
+}
+
+/* BACK SIDE OF ID CARD */
+.id-card-back {
+    text-align: center;
+    justify-content: space-between;
+}
+
+.back-header {
+    border-bottom: 1.5px solid #1e3a8a;
+    padding-bottom: 2px;
+    margin-bottom: 3px;
+}
+
+.back-header h4 {
+    font-size: 10.5px;
+    color: #1e3a8a;
+    margin: 0;
+    font-weight: 700;
+}
+
+/* ULTRA-SHARP QR CODE CONTAINER */
+.id-qr-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2px 0;
+}
+
+.id-qr-box img {
+    width: 32mm;
+    height: 32mm;
+    border: 1px solid #0f172a;
+    padding: 1.5px;
+    background: #ffffff;
+    border-radius: 3px;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    display: block;
+}
+
+.qr-caption {
+    font-size: 7.5px;
+    color: #475569;
+    margin-top: 2px;
+    font-weight: 600;
+}
+
+.id-back-info {
+    font-size: 8px;
+    text-align: left;
+    margin-top: 2px;
+    line-height: 1.25;
+}
+
+.id-back-info p {
+    margin: 1px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.company-address-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 3px;
+    padding: 2px 4px;
+    font-size: 7.5px;
+    margin-top: 2px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.lost-notice {
+    font-size: 7px;
+    color: #dc2626;
+    margin-top: 2px;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* MODAL STYLES */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    width: 750px;
+    max-width: 92%;
+    border-radius: 8px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25);
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 520px;
+    overflow-y: auto;
+}
+
+.modal-table {
+    border: 1px solid #e2e8f0;
+}
+
+.modal-table th, .modal-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+.modal-table th { background: #f8fafc; font-weight: 600; }
+
+/* APPRAISAL DROPDOWN SELECTS IN TABLE */
+.appraisal-select {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* CUSTOM DATA TABLE (LEAVE ENTRIES, ETC.) */
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.custom-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 13.5px;
+}
+
+.custom-data-table th {
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #cbd5e1;
+}
+
+.custom-data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1e293b;
+}
+
+.custom-data-table tr:hover {
+    background: #f8fafc;
+}
+
+.btn-icon-del {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-icon-del:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.modal-md {
+    max-width: 650px;
+}
+
+.badge-leave {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+.badge-leave-cl { background: #dbeafe; color: #1e40af; }
+.badge-leave-sl { background: #fef3c7; color: #92400e; }
+.badge-leave-el { background: #dcfce7; color: #166534; }
+
+/* =====================================================================
+   PRINT MEDIA RULES (@media print)
+   ===================================================================== */
+
+@media print {
+    body {
+        background: transparent !important;
+        font-family: 'Kalpurush', 'Times New Roman', Times, serif !important;
+    }
+
+    .en-text,
+    .printFactoryNameEn,
+    .d-name-en,
+    .d-father-en,
+    .d-spouse-en,
+    .d-pres-en,
+    .doctor-certificate,
+    .medical-section,
+    .id-title-en,
+    .id-back-info,
+    .english-font,
+    [lang="en"] {
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+    }
+
+    .no-print,
+    .top-nav,
+    .sidebar,
+    .modal-overlay {
+        display: none !important;
+    }
+
+    .app-container {
+        display: block !important;
+    }
+
+    .content-area {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .a4-page {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        min-height: auto !important;
+        page-break-after: always;
+    }
+
+    /* Single tab print */
+    body:not(.print-all-mode) .tab-pane:not(.active) {
+        display: none !important;
+    }
+
+    body:not(.print-all-mode) .tab-pane.active {
+        display: block !important;
+    }
+
+    body:not(.print-all-mode) .tab-pane.active.printable-page {
+        display: flex !important;
+        justify-content: center;
+    }
+
+    /* Bulk print mode */
+    body.print-all-mode .tab-pane#tab-0,
+    body.print-all-mode .tab-pane#tab-14,
+    body.print-all-mode .tab-pane#tab-15 {
+        display: none !important;
+    }
+
+    body.print-all-mode .tab-pane.printable-page {
+        display: flex !important;
+        justify-content: center;
+        page-break-after: always;
+    }
+
+    .id-cards-wrapper {
+        margin-top: 10mm !important;
+        box-shadow: none !important;
+        gap: 15mm !important;
+    }
+
+    .id-card {
+        width: 5.4cm !important;
+        height: 8.6cm !important;
+        min-width: 5.4cm !important;
+        max-width: 5.4cm !important;
+        min-height: 8.6cm !important;
+        max-height: 8.6cm !important;
+        box-shadow: none !important;
+        border: 1.5px solid #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .id-qr-box img {
+        image-rendering: -webkit-optimize-contrast !important;
+        image-rendering: pixelated !important;
+    }
+
+    #tab-14.active {
+        width: 100% !important;
+    }
+
+    #tab-14 .salary-sheet-paper {
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    #tab-14 table {
+        font-size: 9.5px !important;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 15mm 12mm 15mm 12mm;
+    }
+}
+
+/* PAYROLL & SALARY SHEET COMPACT TABLE STYLES */
+.salary-sheet-paper {
+    background: #ffffff;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.salary-data-table th, 
+.salary-data-table td {
+    font-family: 'Times New Roman', 'Kalpurush', sans-serif !important;
+}
+
+.salary-data-table th {
+    color: #1e293b;
+    font-size: 11px;
+}
+
+.salary-data-table td {
+    font-size: 11px;
+    color: #0f172a;
+}
+
+@media print {
+    body:has(#tab-14.active) @page {
+        size: A4 landscape;
+        margin: 8mm 6mm 8mm 6mm;
+    }
+}
+
+
+
+/* =====================================================================
+   EXCEL SHEET ENTRY FORM (PAGE 1 MASTER ENTRY LAYOUT)
+   ===================================================================== */
+.excel-entry-card {
+    background: #ffffff;
+    border: 1.5px solid #475569;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin: 15px auto 25px auto;
+    max-width: 780px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.excel-watermark {
+    position: absolute;
+    right: 45px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 75px;
+    font-weight: 800;
+    color: rgba(148, 163, 184, 0.38);
+    pointer-events: none;
+    user-select: none;
+    font-family: Arial, Helvetica, sans-serif;
+    z-index: 1;
+}
+
+.excel-entry-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'SolaimanLipi', 'Kalpurush', 'Segoe UI', Arial, sans-serif;
+    font-size: 13.5px;
+    position: relative;
+    z-index: 2;
+    background: transparent;
+}
+
+.excel-entry-table tr {
+    height: 31px;
+}
+
+.excel-entry-table td {
+    border: 1px solid #94a3b8;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.excel-entry-table td.cell-label {
+    width: 38%;
+    padding: 3px 12px;
+    font-weight: bold;
+    color: #0f172a;
+    background: #ffffff;
+    text-align: right;
+    white-space: nowrap;
+    border-right: 1px solid #94a3b8;
+}
+
+.excel-entry-table td.cell-value {
+    width: 44%;
+    padding: 0;
+    background: #ffffff;
+    border-right: 1px solid #94a3b8;
+}
+
+.excel-entry-table td.cell-extra {
+    width: 18%;
+    padding: 0;
+    background: #ffffff;
+    text-align: center;
+}
+
+.excel-cell-input {
+    width: 100%;
+    height: 100%;
+    min-height: 31px;
+    border: none;
+    outline: none;
+    padding: 3px 8px;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #0f172a;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+.excel-cell-input:focus {
+    background: #fef08a !important;
+    box-shadow: inset 0 0 0 1.5px #2563eb;
+}
+
+.excel-cell-input.yellow-bg {
+    background: #ffff00 !important;
+    background-color: #ffff00 !important;
+}
+
+.excel-cell-input.yellow-bg:focus {
+    background: #fef08a !important;
+    box-shadow: inset 0 0 0 2px #2563eb;
+}
+
+td.yellow-bg {
+    background-color: #ffff00 !important;
+}
+
+@media print {
+    .excel-entry-card {
+        border: 1.5px solid #000 !important;
+        box-shadow: none !important;
+        margin: 0 auto !important;
+        page-break-after: always;
+    }
+    .excel-entry-table td {
+        border: 1px solid #000 !important;
+    }
+    .excel-cell-input.yellow-bg, td.yellow-bg {
+        background-color: #ffff00 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
