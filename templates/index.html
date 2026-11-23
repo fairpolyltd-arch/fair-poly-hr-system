@@ -11,6 +11,9 @@
     <!-- TOP HEADER BAR (HIDDEN IN PRINT) -->
     <header class="top-nav no-print">
         <div class="nav-left">
+            <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileSidebar()" aria-label="মেনু খুলুন">
+                ☰
+            </button>
             <div class="logo-area">
                 <img id="navLogo" src="/static/img/default_logo.png" class="header-logo-img" alt="Logo">
                 <div>
@@ -75,11 +78,21 @@
         </div>
     </nav>
 
+    <!-- SIDEBAR BACKDROP (MOBILE ONLY) -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop no-print" onclick="closeMobileSidebar()"></div>
+
     <!-- MAIN APP CONTAINER -->
     <div class="app-container">
         
         <!-- SIDEBAR NAVIGATION (HIDDEN IN PRINT) -->
         <aside class="sidebar no-print">
+            <div class="sidebar-mobile-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:18px;">📑</span>
+                    <span style="font-weight:700; color:#0f172a; font-size:15px;">ফরম ও মেনু নির্বাচন</span>
+                </div>
+                <button type="button" class="btn-sidebar-close" onclick="closeMobileSidebar()" aria-label="Close">✕</button>
+            </div>
             <!-- CURRENT EMPLOYEE CARD -->
             <div class="emp-profile-card">
                 <div class="avatar-badge" id="sidebarAvatar">
@@ -168,6 +181,15 @@
 
         <!-- CONTENT AREA -->
         <main class="content-area">
+
+            <!-- MOBILE ACTIVE DOCUMENT INDICATOR & QUICK FORM SWITCHER -->
+            <div class="mobile-doc-indicator no-print" onclick="toggleMobileSidebar()">
+                <div class="mdi-left">
+                    <span class="mdi-icon">📄</span>
+                    <span class="mdi-text">চলমান ফরম: <strong id="mobileActiveDocName">০১ মাস্টার এন্ট্রি ফরম</strong></span>
+                </div>
+                <span class="mdi-pill">মেনু ▾</span>
+            </div>
 
             <!-- TAB 0: MAIN DATA ENTRY FORM -->
             <!-- TAB 0: MAIN DATA ENTRY FORM (EXCEL PAGE 1 SPREADSHEET LAYOUT) -->
@@ -2715,6 +2737,30 @@
             </div>
         </div>
     </div>
+
+    <!-- MOBILE STICKY BOTTOM NAVIGATION (TOUCH-OPTIMIZED) -->
+    <nav class="mobile-bottom-bar no-print">
+        <button type="button" class="mbb-item" onclick="toggleMobileSidebar()">
+            <span class="mbb-icon">☰</span>
+            <span class="mbb-label">ফরমসমূহ</span>
+        </button>
+        <button type="button" class="mbb-item" onclick="createNewEmployee()">
+            <span class="mbb-icon">➕</span>
+            <span class="mbb-label">নতুন</span>
+        </button>
+        <button type="button" class="mbb-item mbb-save" onclick="saveEmployeeData()">
+            <span class="mbb-icon">💾</span>
+            <span class="mbb-label">সংরক্ষণ</span>
+        </button>
+        <button type="button" class="mbb-item" onclick="openEmployeeModal()">
+            <span class="mbb-icon">👥</span>
+            <span class="mbb-label">কর্মী তালিকা</span>
+        </button>
+        <button type="button" class="mbb-item" onclick="switchMainModule('salary')">
+            <span class="mbb-icon">📊</span>
+            <span class="mbb-label">স্যালারি</span>
+        </button>
+    </nav>
 
 </body>
 </html>

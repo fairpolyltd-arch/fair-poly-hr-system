@@ -1575,3 +1575,471 @@ td.yellow-bg {
         print-color-adjust: exact !important;
     }
 }
+
+
+/* =====================================================================
+   MOBILE & TABLET RESPONSIVE STYLES (SCREEN ONLY)
+   ===================================================================== */
+
+@media screen {
+    * {
+        -webkit-tap-highlight-color: transparent;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+}
+
+/* 1. Header mobile toggle button */
+.mobile-menu-toggle {
+    display: none;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    font-size: 20px;
+    line-height: 1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+}
+.mobile-menu-toggle:active {
+    background: #334155;
+}
+
+/* 2. Sidebar Backdrop for Drawer */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 9998;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.sidebar-backdrop.active {
+    display: block;
+    opacity: 1;
+}
+
+/* 3. Sidebar mobile header */
+.sidebar-mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    border-bottom: 1.5px solid #e2e8f0;
+}
+.btn-sidebar-close {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.btn-sidebar-close:active {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+/* 4. Mobile Document Indicator */
+.mobile-doc-indicator {
+    display: none;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.mobile-doc-indicator:active {
+    background: #f8fafc;
+}
+.mdi-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    color: #1e293b;
+}
+.mdi-text strong {
+    color: #2563eb;
+}
+.mdi-pill {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* 5. Mobile Bottom Sticky Nav */
+.mobile-bottom-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #0f172a;
+    border-top: 1px solid #1e293b;
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)) 4px;
+    z-index: 9990;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.25);
+}
+.mbb-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 6px 2px;
+    font-size: 11px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: color 0.15s ease, background 0.15s ease;
+    user-select: none;
+}
+.mbb-item:active {
+    background: rgba(255, 255, 255, 0.08);
+}
+.mbb-icon {
+    font-size: 18px;
+    line-height: 1;
+    margin-bottom: 3px;
+}
+.mbb-label {
+    font-size: 10.5px;
+    font-weight: 600;
+}
+.mbb-item.mbb-save {
+    color: #4ade80;
+}
+.mbb-item.mbb-save .mbb-icon {
+    transform: scale(1.1);
+}
+
+/* =====================================================================
+   BREAKPOINT: Large Tablets & Laptops (max-width: 1024px)
+   ===================================================================== */
+@media screen and (max-width: 1024px) {
+    .top-nav {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 10px 14px;
+    }
+    .nav-center {
+        order: 3;
+        width: 100%;
+        margin-top: 2px;
+    }
+    .search-box-wrapper {
+        width: 100%;
+    }
+    .search-box {
+        width: 100%;
+    }
+    .search-box input {
+        width: 100%;
+    }
+    #searchDropdown {
+        width: 100% !important;
+    }
+    .top-module-nav {
+        padding: 0 14px;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+    .top-tab-btn {
+        padding: 10px 16px;
+        font-size: 13.5px;
+    }
+}
+
+/* =====================================================================
+   BREAKPOINT: Tablets & Mobile Devices (max-width: 992px)
+   ===================================================================== */
+@media screen and (max-width: 992px) {
+    /* Show mobile triggers */
+    .mobile-menu-toggle {
+        display: inline-flex;
+    }
+    .sidebar-mobile-header {
+        display: flex;
+    }
+    .mobile-doc-indicator {
+        display: flex;
+    }
+    .mobile-bottom-bar {
+        display: flex;
+    }
+
+    /* Transform Sidebar into Off-Canvas Drawer */
+    .sidebar {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        width: 300px;
+        max-width: 86vw;
+        height: 100vh;
+        max-height: 100vh;
+        background: #ffffff;
+        z-index: 9999;
+        box-shadow: none;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 18px 16px 80px 16px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: 6px 0 25px rgba(0, 0, 0, 0.28);
+    }
+
+    /* Main Container & Content */
+    .app-container {
+        display: block;
+        min-height: auto;
+        width: 100%;
+    }
+    .content-area {
+        width: 100%;
+        max-width: 100%;
+        padding: 12px 10px 84px 10px;
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    /* Header adjustments */
+    .brand-title {
+        font-size: 15px;
+    }
+    .brand-sub {
+        font-size: 11px;
+    }
+    .header-logo-img {
+        width: 38px;
+        height: 38px;
+    }
+    .nav-right {
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .nav-right .btn {
+        padding: 6px 10px;
+        font-size: 12.5px;
+    }
+    .nav-right .btn-outline {
+        display: none;
+    }
+
+    /* Tab 0 Card Box & Action buttons */
+    .card-box {
+        padding: 14px 12px;
+        border-radius: 8px;
+    }
+    .card-header.flex-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 12px;
+    }
+    .card-header .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .card-header .header-actions .btn {
+        flex: 1 1 calc(50% - 6px);
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* Spreadsheet Table in Tab 0 */
+    .excel-entry-card {
+        margin: 10px 0 20px 0;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 6px;
+    }
+    .excel-entry-table {
+        min-width: 580px;
+    }
+    .excel-watermark {
+        font-size: 55px;
+        right: 15px;
+    }
+    .excel-cell-input {
+        font-size: 14px;
+        padding: 6px 8px;
+    }
+
+    /* Printable A4 Pages on Screen View (Adaptive View) */
+    .a4-page {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        padding: 14px 10px !important;
+        margin: 0 auto 18px auto !important;
+        border-radius: 6px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
+        font-size: 12.5px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    .company-doc-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+    .company-doc-header img {
+        height: 38px;
+    }
+    .company-doc-header h1 {
+        font-size: 16px !important;
+    }
+
+    /* Tab 14: Salary & Attendance Sheet */
+    .payroll-config-card > div {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 12px;
+    }
+    .payroll-config-card > div > div {
+        width: 100% !important;
+    }
+    .payroll-summary-bar {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    .payroll-table-wrapper,
+    .salary-table-container,
+    #salaryTableContainer,
+    #attMatrixTableWrapper {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        display: block !important;
+        border-radius: 6px;
+        border: 1px solid #cbd5e1;
+    }
+    #salaryTable,
+    #monthlyAttMatrixTable,
+    #dailyAttendanceTable {
+        min-width: 900px;
+    }
+
+    /* Tab 15: Daily Attendance */
+    #attSubDailyView .card-header,
+    #attSubMonthlyView .card-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    #attSubDailyView .header-actions,
+    #attSubMonthlyView .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    /* Modals on Mobile */
+    .modal-content {
+        width: 96% !important;
+        max-width: 96vw !important;
+        margin: 10px auto !important;
+        max-height: 90vh !important;
+        border-radius: 10px !important;
+    }
+    .modal-header {
+        padding: 12px 16px;
+    }
+    .modal-header h3 {
+        font-size: 15px;
+    }
+    .modal-body {
+        padding: 14px 12px;
+        max-height: calc(90vh - 100px) !important;
+    }
+}
+
+/* =====================================================================
+   BREAKPOINT: Mobile Phones (max-width: 576px)
+   ===================================================================== */
+@media screen and (max-width: 576px) {
+    .top-nav {
+        padding: 8px 10px;
+    }
+    .nav-left {
+        gap: 6px;
+    }
+    .brand-title {
+        font-size: 13.5px;
+        line-height: 1.2;
+    }
+    .brand-sub {
+        display: none;
+    }
+    .header-logo-img {
+        width: 32px;
+        height: 32px;
+    }
+    .mobile-menu-toggle {
+        padding: 6px 10px;
+        font-size: 18px;
+    }
+    .nav-right .btn-print,
+    .nav-right .btn-secondary:first-child {
+        display: none;
+    }
+    .top-module-nav {
+        padding: 0 6px;
+    }
+    .top-tab-btn {
+        padding: 8px 12px;
+        font-size: 12.5px;
+        gap: 5px;
+    }
+    .top-tab-btn .tab-pill {
+        display: none;
+    }
+    .payroll-summary-bar {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    .payroll-summary-bar .summary-card {
+        padding: 10px 8px !important;
+    }
+    .summary-card h4 {
+        font-size: 11px !important;
+    }
+    .summary-card .stat-val {
+        font-size: 16px !important;
+    }
+    .modal-body {
+        padding: 10px 8px;
+    }
+}

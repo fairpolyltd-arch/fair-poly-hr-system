@@ -189,6 +189,50 @@ function switchTab(index) {
     } else {
         updateAllDocumentsFromForm();
     }
+
+    // Update mobile active doc indicator
+    const mobileDocName = document.getElementById('mobileActiveDocName');
+    if (mobileDocName) {
+        if (index === 14) {
+            mobileDocName.textContent = 'মাসিক স্যালারি ও অ্যাটেন্ডেন্স শিট';
+        } else if (index === 15) {
+            mobileDocName.textContent = 'দৈনিক হাজিরা ও লাইভ পাঞ্চ';
+        } else {
+            const activeDoc = document.querySelector(`.doc-menu .doc-item:nth-child(${index + 1}) .doc-name`);
+            if (activeDoc) {
+                mobileDocName.textContent = activeDoc.textContent.trim();
+            }
+        }
+    }
+
+    // Auto close mobile drawer on tab selection
+    if (window.innerWidth <= 992) {
+        closeMobileSidebar();
+    }
+}
+
+// Mobile Sidebar Drawer Handlers
+function toggleMobileSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    if (sidebar && backdrop) {
+        const isOpen = sidebar.classList.contains('mobile-open');
+        if (isOpen) {
+            closeMobileSidebar();
+        } else {
+            sidebar.classList.add('mobile-open');
+            backdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+}
+
+function closeMobileSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    if (sidebar) sidebar.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 // Top Module Navigation Handler
